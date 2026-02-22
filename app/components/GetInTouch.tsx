@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { MessageCircle, Phone, Mail, ArrowRight } from 'lucide-react'
 
 export function GetInTouch() {
   return (
@@ -9,49 +10,39 @@ export function GetInTouch() {
         <div className="home_heading__oW6N7">
           <h4>Get In Touch</h4>
         </div>
-        <div className="home_content__h_a4D">
-          <div className="home_card__d7Bsl">
-            <div className="home_cardLogo__MRtbO">
-              <img alt="whats app icon" src="/img/home/whatsappIcon.svg" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg p-5 flex items-center gap-4 cursor-pointer hover:shadow-lg transition-shadow">
+            <div className="bg-green-100 p-3 rounded-full">
+              <MessageCircle className="w-6 h-6 text-green-600" />
             </div>
-            <div className="home_cardContent__AF1xk">
-              <h6>Chat with us</h6>
-              <p>Send us a message</p>
+            <div>
+              <h6 className="font-semibold">Chat with us</h6>
+              <p className="text-sm text-gray-500">Send us a message</p>
             </div>
-            <div className="home_cardSubIcon__LllxH">
-              <img alt="right arrow icon" src="/img/home/rightArrowIcon.svg" />
-            </div>
+            <ArrowRight className="w-5 h-5 text-gray-400 ml-auto" />
           </div>
           
-          <Link href="tel:+91 93-55-777-529" className="home_card__d7Bsl" style={{ color: 'black', textDecoration: 'none' }}>
-            <div className="home_cardLogo__MRtbO">
-              <img alt="phone call icon" src="/img/home/phoneCallIcon.svg" />
+          <Link href="tel:+91 93-55-777-529" className="bg-white rounded-lg p-5 flex items-center gap-4 cursor-pointer hover:shadow-lg transition-shadow text-decoration-none text-inherit">
+            <div className="bg-blue-100 p-3 rounded-full">
+              <Phone className="w-6 h-6 text-blue-600" />
             </div>
-            <div className="home_cardContent__AF1xk">
-              <h6>Talk to us</h6>
-              <p>93-55-777-529</p>
+            <div>
+              <h6 className="font-semibold">Talk to us</h6>
+              <p className="text-sm text-gray-500">93-55-777-529</p>
             </div>
-            <div className="home_cardSubIcon__LllxH">
-              <img alt="right arrow icon" src="/img/home/rightArrowIcon.svg" />
-            </div>
+            <ArrowRight className="w-5 h-5 text-gray-400 ml-auto" />
           </Link>
           
-          <Link href="mailto:support@carinfo.app" className="home_card__d7Bsl" style={{ color: 'black', textDecoration: 'none' }}>
-            <div className="home_cardLogo__MRtbO">
-              <img alt="email icon" src="/img/home/emailIcon.svg" />
+          <Link href="mailto:support@carinfo.app" className="bg-white rounded-lg p-5 flex items-center gap-4 cursor-pointer hover:shadow-lg transition-shadow text-decoration-none text-inherit">
+            <div className="bg-orange-100 p-3 rounded-full">
+              <Mail className="w-6 h-6 text-orange-600" />
             </div>
-            <div className="home_cardContent__AF1xk">
-              <h6>Write to us</h6>
-              <p>support@carinfo.app</p>
+            <div>
+              <h6 className="font-semibold">Write to us</h6>
+              <p className="text-sm text-gray-500">support@carinfo.app</p>
             </div>
-            <div className="home_cardSubIcon__LllxH">
-              <img alt="right arrow icon" src="/img/home/rightArrowIcon.svg" />
-            </div>
+            <ArrowRight className="w-5 h-5 text-gray-400 ml-auto" />
           </Link>
-        </div>
-        
-        <div className="home_planeImage__QEl_5">
-          <img alt="plane icon" src="/img/home/planeIcon.svg" />
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, Twitter, Car, PlayCircle, Apple } from 'lucide-react'
 
 const popularSUVs = [
   { name: 'Hyundai Creta', link: '/new-cars/hyundai/creta' },
@@ -31,117 +32,128 @@ const popularHatchbacks = [
 
 export function Footer() {
   return (
-    <div className="layout_homeFooterLayout__lTHto">
-      <div className="MuiBox-root">
-        <div className="MuiContainer-root MuiContainer-maxWidthLg">
-          <div className="MuiBox-root">
-            <div className="MuiBox-root">
-              <div className="MuiBox-root">
-                <img alt="car info" src="/_next/static/media/carinfofooter.74afa9f5.svg" />
-                <div className="MuiBox-root">
-                  <p className="MuiTypography-root MuiTypography-body1">
-                    CarInfo is your all-in-one app for all your vehicle info needs and RTO vehicle information. Now manage all your vehicles in one place. Trace your car number with owner name
-                  </p>
-                  <div className="MuiBox-root">
-                    <div className="MuiBox-root">
-                      <img src="/img/footer/phoneicon.svg" alt="phone" />
-                      <Link href="tel:+91 93-55-777-529" style={{ color: 'black', textDecoration: 'none' }}>
-                        <p className="MuiTypography-root MuiTypography-body1">93-55-777-529</p>
-                      </Link>
-                    </div>
-                    <div className="MuiBox-root">
-                      <img alt="email icon" src="/img/home/emailIcon.svg" />
-                      <Link href="mailto:support@carinfo.app" style={{ color: 'black', textDecoration: 'none' }}>
-                        <p className="MuiTypography-root MuiTypography-body1">support@carinfo.app</p>
-                      </Link>
-                    </div>
-                    <div className="MuiBox-root">
-                      <img alt="location" src="/_next/static/media/locationcarinfo.27e08ce9.svg" />
-                      <p className="MuiTypography-root MuiTypography-body1">Delhi</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="MuiBox-root">
-                  <p>Follow Our Journey:</p>
-                  <Link href="https://www.facebook.com/carinfoapp">
-                    <img alt="facebook icon" src="/_next/static/media/Frame (1).e182ab86.svg" />
-                  </Link>
-                  <Link href="http://instagram.com/carinfoapp">
-                    <img alt="insta icon" src="/_next/static/media/Frame.2efcfdbb.svg" />
-                  </Link>
-                  <Link href="https://in.linkedin.com/company/carinfoapp">
-                    <img alt="linkedin icon" src="/img/home/linkedInIcon.svg" />
-                  </Link>
-                </div>
+    <div className="layout_homeFooterLayout__lTHto bg-gray-900 text-white pt-16 pb-8">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <Car className="w-8 h-8 text-primary" />
+              <span className="text-2xl font-bold">CarInfo</span>
+            </div>
+            <p className="text-gray-400 text-sm mb-4">
+              CarInfo is your all-in-one app for all your vehicle info needs and RTO vehicle information. Now manage all your vehicles in one place.
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-gray-400">
+                <Phone className="w-4 h-4" />
+                <Link href="tel:+91 93-55-777-529" className="hover:text-white">93-55-777-529</Link>
               </div>
-              
-              <div className="MuiBox-root">
-                <div className="MuiBox-root">
-                  <div className="MuiBox-root">
-                    <Link href="/about-us"><p>About Us</p></Link>
-                    <Link href="/terms-condition"><p>Terms and Conditions</p></Link>
-                    <Link href="/privacy-policy"><p>Privacy Policy</p></Link>
-                    <Link href="/refund-policy"><p>Refunds & Cancellations Policy</p></Link>
-                    <Link href="/shipping-policy"><p>Shipping & Delivery Policy</p></Link>
-                    <Link href="/sitemap"><p>Sitemap</p></Link>
-                    <Link href="/rc-search"><p>Check RC Details</p></Link>
-                    <Link href="/rto-vehicle-registration-detail"><p>Check RTO Details</p></Link>
-                    <Link href="/e-challan-check"><p>Check Challans</p></Link>
-                    <Link href="/faq"><p>FAQs</p></Link>
-                  </div>
-                </div>
-                
-                <div className="MuiBox-root">
-                  <p>Popular SUVs</p>
-                  <div className="MuiBox-root">
-                    {popularSUVs.map((car, index) => (
-                      <Link key={index} href={car.link}><p>{car.name}</p></Link>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="MuiBox-root">
-                  <p>Popular Sedans</p>
-                  <div className="MuiBox-root">
-                    {popularSedans.map((car, index) => (
-                      <Link key={index} href={car.link}><p>{car.name}</p></Link>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="MuiBox-root">
-                  <p>Popular Hatchbacks</p>
-                  <div className="MuiBox-root">
-                    {popularHatchbacks.map((car, index) => (
-                      <Link key={index} href={car.link}><p>{car.name}</p></Link>
-                    ))}
-                  </div>
-                </div>
+              <div className="flex items-center gap-3 text-gray-400">
+                <Mail className="w-4 h-4" />
+                <Link href="mailto:support@carinfo.app" className="hover:text-white">support@carinfo.app</Link>
               </div>
+              <div className="flex items-center gap-3 text-gray-400">
+                <MapPin className="w-4 h-4" />
+                <span>Delhi</span>
+              </div>
+            </div>
+            <div className="flex gap-4 mt-4">
+              <Link href="https://www.facebook.com/carinfoapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
+                <Facebook className="w-5 h-5" />
+              </Link>
+              <Link href="http://instagram.com/carinfoapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
+                <Instagram className="w-5 h-5" />
+              </Link>
+              <Link href="https://in.linkedin.com/company/carinfoapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
+                <Linkedin className="w-5 h-5" />
+              </Link>
             </div>
           </div>
-          
-          <div className="MuiBox-root">
-            <div className="MuiBox-root">
-              <div className="MuiBox-root">
-                <p>Download the</p>
-                <p>CarInfo App:</p>
-              </div>
-              <Link href="https://play.google.com/store/apps/details?id=com.cuvora.carinfo" target="__blank">
-                <img alt="play store icon" src="/img/footer/playStoreBanner.svg" />
-              </Link>
-              <Link href="https://apps.apple.com/in/app/carinfo-vehicle-information/id1146173741" target="__blank">
-                <img alt="app store icon" src="/img/footer/appStoreBanner.svg" />
-              </Link>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2">
+              <li><Link href="/about-us" className="text-gray-400 hover:text-white">About Us</Link></li>
+              <li><Link href="/terms-condition" className="text-gray-400 hover:text-white">Terms and Conditions</Link></li>
+              <li><Link href="/privacy-policy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/refund-policy" className="text-gray-400 hover:text-white">Refunds & Cancellations</Link></li>
+              <li><Link href="/shipping-policy" className="text-gray-400 hover:text-white">Shipping & Delivery</Link></li>
+              <li><Link href="/faq" className="text-gray-400 hover:text-white">FAQs</Link></li>
+            </ul>
+          </div>
+
+          {/* Vehicle Services */}
+          <div>
+            <h4 className="font-semibold mb-4">Vehicle Services</h4>
+            <ul className="space-y-2">
+              <li><Link href="/rc-search" className="text-gray-400 hover:text-white">Check RC Details</Link></li>
+              <li><Link href="/rto-vehicle-registration-detail" className="text-gray-400 hover:text-white">Check RTO Details</Link></li>
+              <li><Link href="/e-challan-check" className="text-gray-400 hover:text-white">Check Challans</Link></li>
+              <li><Link href="/service-history" className="text-gray-400 hover:text-white">Service History</Link></li>
+            </ul>
+          </div>
+
+          {/* Popular SUVs */}
+          <div>
+            <h4 className="font-semibold mb-4">Popular SUVs</h4>
+            <ul className="space-y-2">
+              {popularSUVs.map((car, index) => (
+                <li key={index}><Link href={car.link} className="text-gray-400 hover:text-white">{car.name}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Popular Sedans & Hatchbacks */}
+          <div>
+            <div className="mb-4">
+              <h4 className="font-semibold mb-2">Popular Sedans</h4>
+              <ul className="space-y-2">
+                {popularSedans.slice(0, 3).map((car, index) => (
+                  <li key={index}><Link href={car.link} className="text-gray-400 hover:text-white text-sm">{car.name}</Link></li>
+                ))}
+              </ul>
             </div>
-            <img alt="footer car icon" src="/img/home/footerCar.svg" />
+            <div>
+              <h4 className="font-semibold mb-2">Popular Hatchbacks</h4>
+              <ul className="space-y-2">
+                {popularHatchbacks.slice(0, 3).map((car, index) => (
+                  <li key={index}><Link href={car.link} className="text-gray-400 hover:text-white text-sm">{car.name}</Link></li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
+
+        {/* App Download Section */}
+        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <h4 className="font-semibold">Download the CarInfo App:</h4>
+          </div>
+          <div className="flex gap-4">
+            <Link href="https://play.google.com/store/apps/details?id=com.cuvora.carinfo" className="bg-black border border-gray-700 rounded-lg px-4 py-2 flex items-center gap-2 hover:bg-gray-800">
+              <PlayCircle className="w-6 h-6" />
+              <div>
+                <p className="text-xs text-gray-400">Get it on</p>
+                <p className="text-sm font-semibold">Google Play</p>
+              </div>
+            </Link>
+            <Link href="https://apps.apple.com/in/app/carinfo-vehicle-information/id1146173741" className="bg-black border border-gray-700 rounded-lg px-4 py-2 flex items-center gap-2 hover:bg-gray-800">
+              <Apple className="w-6 h-6" />
+              <div>
+                <p className="text-xs text-gray-400">Download on the</p>
+                <p className="text-sm font-semibold">App Store</p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+          All rights reserved ©2026 CarInfo.
+        </div>
       </div>
-      
-      <footer className="main-footer">
-        All rights reserved ©2026 CarInfo.
-      </footer>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { ServiceTabs } from './ServiceTabs'
+import { QrCode } from 'lucide-react'
 
 export function HeroSection() {
   return (
@@ -12,11 +13,11 @@ export function HeroSection() {
             <h3>Car Assistant!</h3>
           </div>
           <div className="home_topBannerInformation__ekIwh">
-            <div className="home_qrImage__Styuy">
-              <img alt="qr icon" src="/img/home/qrIcon.svg" width={80} height={80} />
+            <div className="home_qrImage__Styuy bg-white p-2 rounded-lg">
+              <QrCode className="w-16 h-16 text-gray-800" />
             </div>
             <div className="home_infoText__P7CYz">
-              <p><span>4.6+</span> Rating</p>
+              <p><span className="text-2xl font-bold">4.6+</span> Rating</p>
               <p>Scan to Download</p>
             </div>
           </div>
