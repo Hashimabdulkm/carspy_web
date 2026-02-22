@@ -33,13 +33,13 @@ export function GetInTouch() {
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
           </Link>
           
-          <Link href="mailto:support@carinfo.app" className="bg-white rounded-lg p-4 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer hover:shadow-lg transition-shadow text-inherit no-underline min-w-0 sm:col-span-2 lg:col-span-1">
+          <Link href="mailto:support@carspy.app" className="bg-white rounded-lg p-4 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer hover:shadow-lg transition-shadow text-inherit no-underline min-w-0 sm:col-span-2 lg:col-span-1">
             <div className="bg-orange-100 p-2.5 sm:p-3 rounded-full flex-shrink-0">
               <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
             </div>
             <div className="min-w-0 flex-1">
               <h6 className="font-semibold text-sm sm:text-base">Write to us</h6>
-              <p className="text-xs sm:text-sm text-gray-500 truncate">support@carinfo.app</p>
+              <p className="text-xs sm:text-sm text-gray-500 truncate">support@carspy.app</p>
             </div>
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
           </Link>

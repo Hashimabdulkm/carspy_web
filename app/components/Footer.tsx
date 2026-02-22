@@ -39,10 +39,10 @@ export function Footer() {
           <div className="lg:col-span-1 sm:col-span-2">
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <Car className="w-7 h-7 sm:w-8 sm:h-8 text-primary flex-shrink-0" />
-              <span className="text-xl sm:text-2xl font-bold">CarInfo</span>
+              <span className="text-xl sm:text-2xl font-bold">carspy</span>
             </div>
             <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 max-w-md">
-              CarInfo is your all-in-one app for all your vehicle info needs and RTO vehicle information. Now manage all your vehicles in one place.
+              carspy is your all-in-one app for all your vehicle info needs and RTO vehicle information. Now manage all your vehicles in one place.
             </p>
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-sm">
@@ -51,7 +51,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-sm">
                 <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                <Link href="mailto:support@carinfo.app" className="hover:text-white break-all">support@carinfo.app</Link>
+                <Link href="mailto:support@carspy.app" className="hover:text-white break-all">support@carspy.app</Link>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-sm">
                 <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -59,13 +59,13 @@ export function Footer() {
               </div>
             </div>
             <div className="flex gap-3 sm:gap-4 mt-3 sm:mt-4">
-              <Link href="https://www.facebook.com/carinfoapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
+              <Link href="https://www.facebook.com/carspyapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
                 <Facebook className="w-5 h-5" />
               </Link>
-              <Link href="http://instagram.com/carinfoapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
+              <Link href="http://instagram.com/carspyapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
                 <Instagram className="w-5 h-5" />
               </Link>
-              <Link href="https://in.linkedin.com/company/carinfoapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
+              <Link href="https://in.linkedin.com/company/carspyapp" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition-colors">
                 <Linkedin className="w-5 h-5" />
               </Link>
             </div>
@@ -129,17 +129,17 @@ export function Footer() {
         {/* App Download Section */}
         <div className="border-t border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
-            <h4 className="font-semibold text-sm sm:text-base">Download the CarInfo App:</h4>
+            <h4 className="font-semibold text-sm sm:text-base">Download the carspy App:</h4>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-            <Link href="https://play.google.com/store/apps/details?id=com.cuvora.carinfo" className="bg-black border border-gray-700 rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 hover:bg-gray-800">
+            <Link href="https://play.google.com/store/apps/details?id=com.cuvora.carspy" className="bg-black border border-gray-700 rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 hover:bg-gray-800">
               <PlayCircle className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-400">Get it on</p>
                 <p className="text-sm font-semibold">Google Play</p>
               </div>
             </Link>
-            <Link href="https://apps.apple.com/in/app/carinfo-vehicle-information/id1146173741" className="bg-black border border-gray-700 rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 hover:bg-gray-800">
+            <Link href="https://apps.apple.com/in/app/carspy-vehicle-information/id1146173741" className="bg-black border border-gray-700 rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 hover:bg-gray-800">
               <Apple className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-400">Download on the</p>
@@ -151,7 +151,7 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400 text-xs sm:text-sm px-2">
-          All rights reserved ©2026 CarInfo.
+          All rights reserved ©2026 carspy.
         </div>
       </div>
     </footer>

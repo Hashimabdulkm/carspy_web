@@ -51,7 +51,7 @@ export function Navbar() {
         { label: 'Bike Insurance', href: '/bike-insurance', icon: <Bike className="w-4 h-4" /> },
       ]
     },
-    { label: 'CarInfo For Business', href: '/partner-form?utm_medium=nav_bar' },
+    { label: 'carspy For Business', href: '/partner-form?utm_medium=nav_bar' },
     { label: 'Contact Us', href: '/contact-us?utm_medium=nav_bar' },
     {
       label: 'More',
@@ -70,8 +70,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <span className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-teal-600 bg-clip-text text-transparent">
-              CarInfo
+            <span className="text-2xl lg:text-3xl font-bold text-black">
+              carspy
             </span>
           </Link>
 

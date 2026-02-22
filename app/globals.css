@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #13c2c2;
-  --primary-foreground: #ffffff;
-  --secondary: #f5f5f5;
-  --secondary-foreground: #171717;
-  --muted: #f5f5f5;
+  /* Theme: pbmit-xclean */
+  --pbmit-xclean-global-color: #fba311;
+  --pbmit-xclean-secondary-color: #09042d;
+  --pbmit-xclean-gradient-color-first: #fba311;
+  --pbmit-xclean-gradient-color-last: #f2b210;
+  --pbmit-xclean-logo-height: 58px;
+  --pbmit-xclean-sticky-logo-height: 50px;
+  --pbmit-xclean-responsive-logo-height: 50px;
+  --pbmit-xclean-link-color-normal: #001837;
+  --pbmit-xclean-link-color-hover: #fba311;
+  --pbmit-xclean-body-bg-color: #fff;
+  --pbmit-xclean-white-color: #fff;
+  --pbmit-xclean-light-bg-color: #f0f2f4;
+  --pbmit-xclean-blackish-color: #001837;
+  --pbmit-xclean-blackish-bg-color: #001837;
+  --pbmit-xclean-preheader-bgcolor-custom: #001837;
+  --pbmit-xclean-header-height: 90px;
+  --pbmit-xclean-header-background-color: #fff;
+  --pbmit-xclean-sticky-header-height: 90px;
+  --pbmit-xclean-sticky-header-background-color: #fff;
+  --pbmit-xclean-main-menu-typography-font-family: var(--font-quicksand), Quicksand, sans-serif;
+  --pbmit-xclean-main-menu-typography-variant: 700;
+  --pbmit-xclean-main-menu-typography-font-size: 14px;
+  --pbmit-xclean-main-menu-typography-line-height: 24px;
+  --pbmit-xclean-main-menu-typography-letter-spacing: 0.5px;
+  --pbmit-xclean-main-menu-typography-color: #001837;
+  --pbmit-xclean-main-menu-typography-text-transform: uppercase;
+  --pbmit-xclean-main-menu-typography-font-style: normal;
+  --pbmit-xclean-main-menu-typography-font-weight: 700;
+  --pbmit-xclean-main-menu-active-color: #fba311;
+  --pbmit-xclean-main-menu-sticky-color: #001837;
+  --pbmit-xclean-main-menu-sticky-active-color: #fba311;
+  --pbmit-xclean-dropdown-menu-typography-font-family: var(--font-open-sans), "Open Sans", sans-serif;
+  --pbmit-xclean-dropdown-menu-typography-variant: 600;
+  --pbmit-xclean-dropdown-menu-typography-font-size: 14px;
+  --pbmit-xclean-dropdown-menu-typography-line-height: 24px;
+  --pbmit-xclean-dropdown-menu-typography-letter-spacing: 0;
+  --pbmit-xclean-dropdown-menu-typography-color: #001837;
+  --pbmit-xclean-dropdown-menu-typography-text-transform: none;
+  --pbmit-xclean-dropdown-menu-typography-font-style: normal;
+  --pbmit-xclean-dropdown-menu-typography-font-weight: 600;
+  --pbmit-xclean-drop-down-menu-active-color: #fba311;
+
+  /* Semantic mapping for app */
+  --background: var(--pbmit-xclean-body-bg-color);
+  --foreground: var(--pbmit-xclean-blackish-color);
+  --primary: var(--pbmit-xclean-global-color);
+  --primary-foreground: var(--pbmit-xclean-white-color);
+  --secondary: var(--pbmit-xclean-light-bg-color);
+  --secondary-foreground: var(--pbmit-xclean-blackish-color);
+  --muted: var(--pbmit-xclean-light-bg-color);
   --muted-foreground: #6b7280;
-  --accent: #f5f5f5;
-  --accent-foreground: #171717;
+  --accent: var(--pbmit-xclean-light-bg-color);
+  --accent-foreground: var(--pbmit-xclean-blackish-color);
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e5e7eb;
   --input: #e5e7eb;
-  --ring: #13c2c2;
+  --ring: var(--pbmit-xclean-global-color);
   --radius: 0.5rem;
-  --popover: #ffffff;
-  --popover-foreground: #171717;
-  --card: #ffffff;
-  --card-foreground: #171717;
+  --popover: var(--pbmit-xclean-white-color);
+  --popover-foreground: var(--pbmit-xclean-blackish-color);
+  --card: var(--pbmit-xclean-white-color);
+  --card-foreground: var(--pbmit-xclean-blackish-color);
 }
 
 @theme inline {
@@ -76,7 +120,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: white;
+  background: var(--pbmit-xclean-header-background-color);
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -89,13 +133,13 @@ body {
   margin: 0 auto;
 }
 
-.navbar_carInfo__sE8YS {
+.navbar_carspy__sE8YS {
   position: relative;
   width: 140px;
   height: 45px;
 }
 
-.navbar_carInfo__sE8YS img {
+.navbar_carspy__sE8YS img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -117,7 +161,7 @@ body {
 }
 
 .navbar_location__EKJqs:hover {
-  background: #f5f5f5;
+  background: var(--pbmit-xclean-light-bg-color);
 }
 
 .navbar_locationIcon__bpILa img {
@@ -127,7 +171,7 @@ body {
 
 .navbar_city___Ue2C {
   font-weight: 600;
-  color: #333;
+  color: var(--pbmit-xclean-main-menu-typography-color);
 }
 
 .navbar_navList__8cu40 {
@@ -148,7 +192,7 @@ body {
   gap: 6px;
   cursor: pointer;
   font-weight: 500;
-  color: #333;
+  color: var(--pbmit-xclean-link-color-normal);
   padding: 8px 0;
 }
 
@@ -162,7 +206,7 @@ body {
   position: absolute;
   top: 100%;
   left: 0;
-  background: white;
+  background: var(--pbmit-xclean-white-color);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   border-radius: 8px;
   min-width: 180px;
@@ -183,19 +227,20 @@ body {
 .navbar_dropdownContent__xgGRZ ul li a {
   display: block;
   padding: 10px 16px;
-  color: #333;
+  color: var(--pbmit-xclean-link-color-normal);
   text-decoration: none;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .navbar_dropdownContent__xgGRZ ul li a:hover {
-  background: #f5f5f5;
+  background: var(--pbmit-xclean-light-bg-color);
+  color: var(--pbmit-xclean-link-color-hover);
 }
 
 .navbar_searchContainer__qPQ_R {
   display: flex;
   align-items: center;
-  background: #f5f5f5;
+  background: var(--pbmit-xclean-light-bg-color);
   border-radius: 24px;
   padding: 8px 16px;
   gap: 8px;
@@ -216,7 +261,7 @@ body {
 
 /* Hero section styles */
 .home_topBannerBackground__WtICw {
-  background: linear-gradient(135deg, #13c2c2 0%, #0d9488 100%);
+  background: linear-gradient(135deg, var(--pbmit-xclean-gradient-color-first) 0%, var(--pbmit-xclean-gradient-color-last) 100%);
   padding: 32px 0 40px;
   position: relative;
   overflow: hidden;
@@ -415,7 +460,7 @@ body {
 }
 
 .tabs_active__9fSsT {
-  background: #f0fdfa;
+  background: rgba(251, 163, 17, 0.12);
 }
 
 .tabs_line__8Dhax {
@@ -425,7 +470,7 @@ body {
 }
 
 .tabs_active__9fSsT .tabs_line__8Dhax {
-  background: #13c2c2;
+  background: var(--pbmit-xclean-global-color);
 }
 
 .home_inputVehicalContainer__4kwKQ {
@@ -541,7 +586,7 @@ body {
 }
 
 .home_greenBg__Ntf_L {
-  background: linear-gradient(135deg, #13c2c2 0%, #0d9488 100%);
+  background: linear-gradient(135deg, var(--pbmit-xclean-gradient-color-first) 0%, var(--pbmit-xclean-gradient-color-last) 100%);
   color: white;
 }
 
@@ -670,21 +715,21 @@ body {
   object-fit: contain;
 }
 
-.home_carInfo__BlvS5 {
+.home_carspy__BlvS5 {
   padding: 8px 10px;
   border-top: 1px solid #e0e0e0;
 }
 
-.home_carInfo__BlvS5 h5 {
+.home_carspy__BlvS5 h5 {
   margin: 0 0 2px;
   font-size: 12px;
   font-weight: 600;
 }
 
-.home_carInfo__BlvS5 p {
+.home_carspy__BlvS5 p {
   margin: 0;
   font-size: 12px;
-  color: #13c2c2;
+  color: var(--pbmit-xclean-global-color);
   font-weight: 600;
 }
 
@@ -704,11 +749,11 @@ body {
     height: 100px;
     padding: 12px;
   }
-  .home_carInfo__BlvS5 {
+  .home_carspy__BlvS5 {
     padding: 10px 12px;
   }
-  .home_carInfo__BlvS5 h5,
-  .home_carInfo__BlvS5 p {
+  .home_carspy__BlvS5 h5,
+  .home_carspy__BlvS5 p {
     font-size: 13px;
   }
 }
@@ -729,11 +774,11 @@ body {
     height: 110px;
     padding: 14px;
   }
-  .home_carInfo__BlvS5 {
+  .home_carspy__BlvS5 {
     padding: 12px;
   }
-  .home_carInfo__BlvS5 h5,
-  .home_carInfo__BlvS5 p {
+  .home_carspy__BlvS5 h5,
+  .home_carspy__BlvS5 p {
     font-size: 14px;
   }
 }
@@ -790,20 +835,20 @@ body {
   object-fit: cover;
 }
 
-.usedcar_carInfo__2wCCL {
+.usedcar_carspy__2wCCL {
   padding: 8px 10px;
 }
 
-.usedcar_carInfo__2wCCL h5 {
+.usedcar_carspy__2wCCL h5 {
   margin: 0 0 2px;
   font-size: 13px;
   font-weight: 600;
 }
 
-.usedcar_carInfo__2wCCL p {
+.usedcar_carspy__2wCCL p {
   margin: 0;
   font-size: 13px;
-  color: #13c2c2;
+  color: var(--pbmit-xclean-global-color);
   font-weight: 600;
 }
 
@@ -822,11 +867,11 @@ body {
   .usedcar_carImage__BBdL9 {
     height: 130px;
   }
-  .usedcar_carInfo__2wCCL {
+  .usedcar_carspy__2wCCL {
     padding: 10px 12px;
   }
-  .usedcar_carInfo__2wCCL h5,
-  .usedcar_carInfo__2wCCL p {
+  .usedcar_carspy__2wCCL h5,
+  .usedcar_carspy__2wCCL p {
     font-size: 14px;
   }
 }
@@ -846,11 +891,11 @@ body {
   .usedcar_carImage__BBdL9 {
     height: 150px;
   }
-  .usedcar_carInfo__2wCCL {
+  .usedcar_carspy__2wCCL {
     padding: 12px;
   }
-  .usedcar_carInfo__2wCCL h5,
-  .usedcar_carInfo__2wCCL p {
+  .usedcar_carspy__2wCCL h5,
+  .usedcar_carspy__2wCCL p {
     font-size: 16px;
   }
 }
@@ -1138,8 +1183,8 @@ body {
 }
 
 .MuiTab-root.Mui-selected {
-  color: #13c2c2;
-  border-bottom-color: #13c2c2;
+  color: var(--pbmit-xclean-global-color);
+  border-bottom-color: var(--pbmit-xclean-global-color);
 }
 
 @media (min-width: 640px) {
@@ -1189,7 +1234,7 @@ body {
 
 /* Get in touch */
 .home_getInTouchLayout__DtIEf {
-  background: #f5f5f5;
+  background: var(--pbmit-xclean-light-bg-color);
   padding: 24px 0;
   margin-top: 24px;
 }
@@ -1258,8 +1303,8 @@ body {
 
 /* Footer */
 .layout_homeFooterLayout__lTHto {
-  background: #1a1a1a;
-  color: white;
+  background: var(--pbmit-xclean-blackish-bg-color);
+  color: var(--pbmit-xclean-white-color);
   padding: 24px 0 16px;
 }
 

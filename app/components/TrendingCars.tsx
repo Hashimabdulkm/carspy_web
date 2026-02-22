@@ -25,7 +25,7 @@ export function TrendingCars() {
             <div className="home_carImage__4chct">
               <img alt={car.brand} src={car.image} />
             </div>
-            <div className="home_carInfo__BlvS5">
+            <div className="home_carspy__BlvS5">
               <h5>{car.name}</h5>
               <p>{car.price}</p>
             </div>

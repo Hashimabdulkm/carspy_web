@@ -5,7 +5,7 @@ import { Star, StarHalf } from 'lucide-react'
 const reviews = [
   {
     name: 'Manish Bhatia',
-    review: "I took my car insurance from CarInfo and it was a smooth process. The options were clear, the premium was affordable.",
+    review: "I took my car insurance from carspy and it was a smooth process. The options were clear, the premium was affordable.",
     rating: 4,
   },
   {
@@ -30,7 +30,7 @@ const reviews = [
   },
   {
     name: 'Neeraj Kapur',
-    review: "Very helpful and have all latest information. Carinfo app gives timely alerts for PUC and Insurance expiry.",
+    review: "Very helpful and have all latest information. carspy app gives timely alerts for PUC and Insurance expiry.",
     rating: 5,
   },
 ]

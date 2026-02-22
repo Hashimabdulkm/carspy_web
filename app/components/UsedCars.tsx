@@ -27,7 +27,7 @@ export function UsedCars() {
             <div className="usedcar_carImage__BBdL9">
               <img alt={car.name} src={car.image} />
             </div>
-            <div className="usedcar_carInfo__2wCCL">
+            <div className="usedcar_carspy__2wCCL">
               <h5>{car.name}</h5>
               <p>{car.price}</p>
             </div>
