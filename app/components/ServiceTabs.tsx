@@ -47,7 +47,7 @@ export function ServiceTabs() {
               role="button"
               tabIndex={0}
             >
-              <Icon className="w-9 h-9 text-gray-600" />
+              <Icon className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-gray-600" />
               <div>
                 <div data-status={activeTab === tab.id ? 'active' : 'inactive'}>{tab.label}</div>
               </div>

@@ -37,11 +37,11 @@ const reviews = [
 
 export function CustomerReviews() {
   return (
-    <div className="home_customerReviews__ojP6I content-wrapper">
+    <section className="home_customerReviews__ojP6I content-wrapper">
       <h4 className="home_heading__oW6N7">What Our Customers Say</h4>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {reviews.map((review, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-md p-6">
+          <div key={index} className="bg-white rounded-lg shadow-md p-4 sm:p-6">
             <div className="flex items-center gap-1 mb-3">
               {[...Array(5)].map((_, i) => (
                 <Star 
@@ -51,10 +51,10 @@ export function CustomerReviews() {
               ))}
             </div>
             <h6 className="font-semibold mb-2">{review.name}</h6>
-            <p className="text-gray-600 text-sm">{review.review}</p>
+            <p className="text-gray-600 text-xs sm:text-sm">{review.review}</p>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

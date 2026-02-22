@@ -37,12 +37,12 @@ const categories = ['News', 'Tips', 'AUTO and EVs', 'RTO', 'Insurance', 'Challan
 
 export function BlogSection() {
   return (
-    <div className="MuiContainer-root MuiContainer-maxWidthLg">
-      <div className="MuiBox-root">
+    <section className="MuiContainer-root MuiContainer-maxWidthLg">
+      <div className="MuiBox-root flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h3 className="MuiTypography-root MuiTypography-h3">Latest From The Auto World</h3>
         <Link href="/blog">
-          <button className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary">
-            <img alt="view all" src="/img/home/viewAllIcon.svg" />
+          <button className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary self-start sm:self-center">
+            <img alt="view all" src="/img/home/viewAllIcon.svg" className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </Link>
       </div>
@@ -75,18 +75,18 @@ export function BlogSection() {
                 <div key={index} className="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-3">
                   <div className="MuiBox-root">
                     <div className="MuiBox-root">
-                      <img alt="blogs" src={post.image} style={{ borderRadius: '20px' }} />
-                      <p className="MuiTypography-root MuiTypography-body1">{post.date}</p>
+                      <img alt="blogs" src={post.image} className="w-full h-auto object-cover rounded-2xl" style={{ borderRadius: '20px' }} />
+                      <p className="MuiTypography-root MuiTypography-body1 text-xs sm:text-sm mt-2">{post.date}</p>
                     </div>
                     <div className="MuiBox-root">
-                      <p className="MuiTypography-root MuiTypography-body1">{post.category}</p>
+                      <p className="MuiTypography-root MuiTypography-body1 text-xs sm:text-sm text-gray-500">{post.category}</p>
                     </div>
                     <div className="MuiBox-root">
-                      <div className="MuiTypography-root MuiTypography-body1">{post.title.substring(0, 50)}...</div>
+                      <div className="MuiTypography-root MuiTypography-body1 text-sm sm:text-base line-clamp-2">{post.title.substring(0, 50)}...</div>
                     </div>
                     <div className="MuiBox-root">
                       <Link href={post.link}>
-                        <button className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary">
+                        <button className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary text-sm">
                           Read More
                         </button>
                       </Link>
@@ -98,6 +98,6 @@ export function BlogSection() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

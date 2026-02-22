@@ -33,7 +33,7 @@ export function CuratedServices() {
   ]
 
   return (
-    <div className="home_curatedServiceContainer__Jljnp content-wrapper">
+    <section className="home_curatedServiceContainer__Jljnp content-wrapper">
       <h5 className="home_heading__oW6N7">Curated Services For You</h5>
       <div className="home_cardsContainer__6logG">
         {services.map((service, index) => (
@@ -88,6 +88,6 @@ export function CuratedServices() {
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

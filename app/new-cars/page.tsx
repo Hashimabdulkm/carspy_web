@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { Filter, X } from 'lucide-react'
 import { Input } from '@/app/components/ui/input'
 import { Button } from '@/app/components/ui/button'
 import { Card, CardContent } from '@/app/components/ui/card'
@@ -128,6 +129,8 @@ export default function NewCarsPage() {
     return true
   })
 
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
   const sortedCars = [...filteredCars].sort((a, b) => {
     switch (sortBy) {
       case 'price-low': return a.price - b.price
@@ -140,41 +143,56 @@ export default function NewCarsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary text-white py-12">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-2">New Cars</h1>
-          <p className="text-lg opacity-90">Find your perfect new car from authorized dealers</p>
+      <div className="bg-primary text-white py-8 sm:py-10 lg:py-12">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">New Cars</h1>
+          <p className="text-sm sm:text-base lg:text-lg opacity-90">Find your perfect new car from authorized dealers</p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-6 sm:py-8">
         {/* Search Bar */}
-        <div className="mb-6 flex gap-4">
+        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Input 
             type="text" 
             placeholder="Search by car name or brand..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1"
+            className="flex-1 min-w-0"
           />
-          <select 
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border rounded-md"
-          >
-            <option value="popular">Most Popular</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="name">Name: A to Z</option>
-          </select>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+            >
+              {filtersOpen ? <X className="w-4 h-4" /> : <Filter className="w-4 h-4" />}
+              Filters
+            </button>
+            <select 
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-3 sm:px-4 py-2 border rounded-md text-sm flex-1 sm:flex-initial min-w-0"
+            >
+              <option value="popular">Most Popular</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">Name: A to Z</option>
+            </select>
+          </div>
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Filters Sidebar */}
-          <div className="w-64 flex-shrink-0">
-            <Card>
-              <CardContent className="p-4">
-                <h3 className="font-semibold mb-4">Filters</h3>
+          <div className={`w-full lg:w-64 flex-shrink-0 ${filtersOpen ? 'block' : 'hidden'} lg:block`}>
+            <Card className="lg:sticky lg:top-24">
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold">Filters</h3>
+                  <button type="button" className="lg:hidden p-1 rounded hover:bg-gray-100" onClick={() => setFiltersOpen(false)} aria-label="Close filters">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
                 
                 {/* Price Range */}
                 <div className="mb-6">
@@ -290,31 +308,31 @@ export default function NewCarsPage() {
           </div>
 
           {/* Cars Grid */}
-          <div className="flex-1">
-            <div className="mb-4">
-              <p className="text-gray-600">{sortedCars.length} cars found</p>
+          <div className="flex-1 min-w-0">
+            <div className="mb-3 sm:mb-4">
+              <p className="text-sm sm:text-base text-gray-600">{sortedCars.length} cars found</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {sortedCars.map(car => (
                 <Link href={`/new-cars/${car.brand.toLowerCase()}/${car.name.toLowerCase().replace(' ', '-')}`} key={car.id}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                    <div className="aspect-video relative bg-white flex items-center justify-center p-4">
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+                    <div className="aspect-video relative bg-white flex items-center justify-center p-3 sm:p-4">
                       <img 
                         src={car.image} 
                         alt={car.name}
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
-                    <CardContent className="p-4">
-                      <p className="text-sm text-gray-500">{car.brand}</p>
-                      <h3 className="font-semibold text-lg">{car.name}</h3>
-                      <div className="flex gap-2 mt-2">
-                        <span className="text-xs bg-gray-100 px-2 py-1 rounded">{car.fuel}</span>
-                        <span className="text-xs bg-gray-100 px-2 py-1 rounded">{car.transmission}</span>
-                        <span className="text-xs bg-gray-100 px-2 py-1 rounded">{car.seats} Seats</span>
+                    <CardContent className="p-3 sm:p-4">
+                      <p className="text-xs sm:text-sm text-gray-500">{car.brand}</p>
+                      <h3 className="font-semibold text-base sm:text-lg">{car.name}</h3>
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
+                        <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.fuel}</span>
+                        <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.transmission}</span>
+                        <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.seats} Seats</span>
                       </div>
-                      <p className="text-primary font-bold text-xl mt-2">
+                      <p className="text-primary font-bold text-lg sm:text-xl mt-2">
                         ₹{car.price.toLocaleString('en-IN')}
                       </p>
                       <Button className="w-full mt-2" size="sm">

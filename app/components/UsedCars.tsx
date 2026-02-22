@@ -15,8 +15,8 @@ const usedCars = [
 
 export function UsedCars() {
   return (
-    <div className="usedcar_usedCars__gfKSs content-wrapper">
-      <h4>Used Cars Around You</h4>
+    <section className="usedcar_usedCars__gfKSs content-wrapper">
+      <h4 className="text-base sm:text-lg lg:text-2xl">Used Cars Around You</h4>
       <div className="usedcar_carsList__X1XqF">
         {usedCars.map((car, index) => (
           <Link 
@@ -34,7 +34,7 @@ export function UsedCars() {
           </Link>
         ))}
       </div>
-      <div className="usedcar_slideArrow__z9an_ usedcar_rightArrow__Hetvq">&gt;</div>
-    </div>
+      <div className="usedcar_slideArrow__z9an_ usedcar_rightArrow__Hetvq" aria-hidden>&gt;</div>
+    </section>
   )
 }

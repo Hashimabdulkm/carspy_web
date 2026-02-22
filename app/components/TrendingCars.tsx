@@ -13,8 +13,8 @@ const trendingCars = [
 
 export function TrendingCars() {
   return (
-    <div className="home_newCars__DMUEA content-wrapper">
-      <h4>Trending New Cars</h4>
+    <section className="home_newCars__DMUEA content-wrapper">
+      <h4 className="text-base sm:text-lg lg:text-2xl">Trending New Cars</h4>
       <div className="home_carsList__37U1g">
         {trendingCars.map((car, index) => (
           <Link 
@@ -32,7 +32,7 @@ export function TrendingCars() {
           </Link>
         ))}
       </div>
-      <div className="home_slideArrow__4ilZN home_rightArrow__08Aiq">&gt;</div>
-    </div>
+      <div className="home_slideArrow__4ilZN home_rightArrow__08Aiq" aria-hidden>&gt;</div>
+    </section>
   )
 }
