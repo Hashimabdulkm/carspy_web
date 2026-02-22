@@ -10,7 +10,6 @@ import {
   Wrench, 
   Tag, 
   Search,
-  MapPin,
   User,
   ChevronDown,
   Menu,
@@ -119,13 +118,6 @@ export function Navbar() {
 
           {/* Right Section */}
           <div className="hidden lg:flex items-center gap-4">
-            {/* Location Selector */}
-            <button className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-primary transition-colors rounded-lg hover:bg-gray-50">
-              <MapPin className="w-4 h-4 text-primary" />
-              <span className="font-medium">Delhi</span>
-              <ChevronDown className="w-3 h-3" />
-            </button>
-
             {/* Search Bar */}
             <div className="relative group">
               <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 rounded-full border border-transparent focus-within:border-primary/30 focus-within:bg-white transition-all duration-200 cursor-pointer hover:bg-gray-100">
@@ -135,9 +127,13 @@ export function Navbar() {
             </div>
 
             {/* User Icon */}
-            <button className="p-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200">
+            <Link
+              href="/profile"
+              className="p-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 inline-flex"
+              aria-label="Profile"
+            >
               <User className="w-5 h-5" />
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -162,13 +158,6 @@ export function Navbar() {
               className="flex-1 bg-transparent border-none outline-none text-sm text-gray-600 placeholder-gray-400"
             />
           </div>
-
-          {/* Mobile Location */}
-          <button className="flex items-center gap-2 w-full px-4 py-3 text-left text-gray-700 rounded-xl hover:bg-gray-50">
-            <MapPin className="w-4 h-4 text-primary" />
-            <span className="font-medium">Delhi</span>
-            <ChevronDown className="w-3 h-3 ml-auto" />
-          </button>
 
           {/* Mobile Nav Items */}
           {navItems.map((item, idx) => (
@@ -208,11 +197,14 @@ export function Navbar() {
             </div>
           ))}
 
-          {/* Mobile User Button */}
-          <button className="flex items-center gap-3 w-full px-4 py-3 mt-4 bg-primary text-white rounded-xl">
+          {/* Mobile Profile / Sign In */}
+          <Link
+            href="/profile"
+            className="flex items-center gap-3 w-full px-4 py-3 mt-4 bg-primary text-white rounded-xl"
+          >
             <User className="w-5 h-5" />
-            <span className="font-medium">Sign In</span>
-          </button>
+            <span className="font-medium">My Profile</span>
+          </Link>
         </div>
       </div>
     </nav>

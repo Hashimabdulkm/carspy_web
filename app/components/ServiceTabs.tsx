@@ -8,10 +8,9 @@ import {
   FileText,
   CreditCard,
   Bike,
-  Wrench,
   Tag,
   Search,
-  MapPin,
+  // MapPin,
 } from 'lucide-react'
 import { Input } from '@/app/components/ui/input'
 import { Button } from '@/app/components/ui/button'
@@ -63,14 +62,6 @@ const defaultTabs: ServiceTabConfig[] = [
     placeholder: 'Enter Vehicle Number',
     needsVehicleNumber: true,
     defaultActive: true,
-  },
-  {
-    id: 'service-history',
-    label: 'Service History',
-    icon: Wrench,
-    href: '/service-history',
-    placeholder: 'Enter Vehicle Registration Number',
-    needsVehicleNumber: true,
   },
   {
     id: 'new-car',
@@ -176,7 +167,7 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
         <form onSubmit={handleSearch}>
           <div className="input_inputWrapper__6aRlN">
             <div className="home_inputPrefixContent__BSuqO flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
+              {/* <MapPin className="w-4 h-4" /> */}
               <p>IND</p>
             </div>
             <Input

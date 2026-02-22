@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Car, Shield, Wrench, ArrowRight } from 'lucide-react'
+import { Car, Shield, ArrowRight, CreditCard } from 'lucide-react'
 
 const banners = [
   {
@@ -19,10 +19,10 @@ const banners = [
     accent: 'bg-primary',
   },
   {
-    href: '/service-history',
-    label: 'View Report',
-    title: 'Service History at your Fingertips',
-    icon: Wrench,
+    href: '/e-challan-check',
+    label: 'Check Challans',
+    title: 'Check Challans for your vehicle',
+    icon: CreditCard,
     accent: 'bg-blue-600',
   },
 ]
