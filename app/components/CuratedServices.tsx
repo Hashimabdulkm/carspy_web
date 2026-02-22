@@ -1,92 +1,107 @@
 'use client'
 
 import Link from 'next/link'
-import { Card, CardContent } from '@/app/components/ui/card'
-import { Button } from '@/app/components/ui/button'
+import { Receipt, Car, BadgeCheck, ArrowRight } from 'lucide-react'
+
+const services = [
+  {
+    title: 'Settle Your Challans Instantly',
+    description: 'Check history and pay challans in one place.',
+    points: ['Challan History', 'Instant Settlement'],
+    button: 'Pay Challans',
+    link: '/e-challan-check',
+    icon: Receipt,
+    image: '/img/home/payChallanPoster.png',
+    accent: 'primary',
+  },
+  {
+    title: 'Sell Your Car From Home',
+    description: 'Get the best value with instant payment.',
+    points: ['Get The Best Value', 'Instant Payment'],
+    button: 'Sell Car',
+    link: '/sell-car',
+    icon: Car,
+    image: '/img/home/sellCarPoster.png',
+    accent: 'secondary',
+  },
+  {
+    title: 'Your Dream Car In Your Budget',
+    description: 'Trusted sellers and exclusive deals.',
+    points: ['Trusted Sellers', 'Exclusive Deals'],
+    button: 'Explore Used Cars',
+    link: '/used-cars-in-delhi',
+    icon: BadgeCheck,
+    image: '/img/home/dreamCarPoster.png',
+    accent: 'neutral',
+  },
+]
 
 export function CuratedServices() {
-  const services = [
-    {
-      title: 'Settle Your Challans Instantly',
-      bgColor: 'rgb(255, 138, 72)',
-      image: '/img/home/payChallanPoster.png',
-      points: ['Challan History', 'Instant Settlement'],
-      button: 'Pay Challans',
-      link: '/e-challan-check'
-    },
-    {
-      title: 'Sell Your Car From Home',
-      bgColor: 'rgb(19, 194, 194)',
-      image: '/img/home/sellCarPoster.png',
-      points: ['Get The Best Value', 'Instant Payment'],
-      button: 'Sell Car',
-      link: '/sell-car'
-    },
-    {
-      title: 'Your Dream Car In Your Budget',
-      bgColor: 'rgb(71, 142, 199)',
-      image: '/img/home/dreamCarPoster.png',
-      points: ['Trusted Sellers', 'Exclusive Deals'],
-      button: 'Explore Used Cars',
-      link: '/used-cars-in-delhi'
-    },
-  ]
-
   return (
-    <section className="home_curatedServiceContainer__Jljnp content-wrapper">
-      <h5 className="home_heading__oW6N7">Curated Services For You</h5>
-      <div className="home_cardsContainer__6logG">
-        {services.map((service, index) => (
-          <Link 
-            key={index} 
-            href={service.link}
-          >
-            <Card 
-              className="home_card__d7Bsl border-0" 
-              style={{ backgroundColor: service.bgColor }}
-            >
-              <CardContent className="p-6">
-                <div className="home_cardImage___aCQ5">
-                  <img 
-                    alt={service.title.toLowerCase().replace(' ', '-')} 
+    <section className="w-full py-10 sm:py-12 lg:py-16">
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-10">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--pbmit-xclean-blackish-color)] m-0 mb-2">
+            Curated Services For You
+          </h2>
+          <p className="text-gray-600 text-sm sm:text-base max-w-xl mx-auto">
+            Quick access to challan payment, car selling, and used car discovery.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+          {services.map((service) => {
+            const Icon = service.icon
+            const isPrimary = service.accent === 'primary'
+            return (
+              <Link
+                key={service.link}
+                href={service.link}
+                className="group block bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg hover:border-[var(--pbmit-xclean-global-color)]/30 transition-all duration-300"
+              >
+                <div className="relative h-36 sm:h-40 bg-gray-100">
+                  <img
                     src={service.image}
-                    style={{ borderRadius: '12px' }}
+                    alt=""
+                    className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-300"
                   />
+                  <div
+                    className={`absolute bottom-3 left-3 w-10 h-10 rounded-xl flex items-center justify-center ${
+                      isPrimary
+                        ? 'bg-[var(--pbmit-xclean-global-color)] text-white'
+                        : 'bg-white/95 text-[var(--pbmit-xclean-blackish-color)]'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </div>
                 </div>
-                <h5 className="home_cardHeading__BOvb9">{service.title}</h5>
-                <div className="home_points__uN3IL">
-                  {service.points.map((point, idx) => (
-                    <div key={idx} className="home_point__tNycR">
-                      <div style={{ 
-                        backgroundColor: index === 0 ? 'rgb(255, 173, 127)' : index === 1 ? 'rgb(92, 219, 211)' : 'rgb(100, 167, 221)',
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        <img 
-                          alt="point icon" 
-                          src={idx === 0 ? '/img/home/whiteBadgeIcon.svg' : '/img/home/rupeeIcon.svg'}
-                          width={12}
-                          height={12}
-                        />
-                      </div>
-                      <p>{point}</p>
-                    </div>
-                  ))}
+                <div className="p-5 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-semibold text-[var(--pbmit-xclean-blackish-color)] mt-0 mb-2 group-hover:text-[var(--pbmit-xclean-global-color)] transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {service.description}
+                  </p>
+                  <ul className="space-y-2 mb-4">
+                    {service.points.map((point) => (
+                      <li
+                        key={point}
+                        className="flex items-center gap-2 text-sm text-gray-700"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--pbmit-xclean-global-color)] shrink-0" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--pbmit-xclean-global-color)] group-hover:gap-2.5 transition-[gap]">
+                    {service.button}
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
                 </div>
-                <Button 
-                  variant="secondary" 
-                  className="w-full mt-4"
-                >
-                  {service.button}
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+              </Link>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

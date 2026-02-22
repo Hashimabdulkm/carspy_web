@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Filter, X } from 'lucide-react'
+import { PageHero } from '@/app/components/PageHero'
 import { Input } from '@/app/components/ui/input'
 import { Button } from '@/app/components/ui/button'
 import { Card, CardContent } from '@/app/components/ui/card'
@@ -142,13 +143,15 @@ export default function NewCarsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-primary text-white py-8 sm:py-10 lg:py-12">
-        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">New Cars</h1>
-          <p className="text-sm sm:text-base lg:text-lg opacity-90">Find your perfect new car from authorized dealers</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Browse & compare"
+        title={
+          <>
+            New <span className="text-[var(--pbmit-xclean-global-color)]">Cars</span>
+          </>
+        }
+        subtitle="Find your perfect new car from authorized dealers. Filter by brand, budget, fuel type, and more."
+      />
 
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl py-6 sm:py-8">
         {/* Search Bar */}

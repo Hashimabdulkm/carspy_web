@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Quicksand, Open_Sans } from "next/font/google";
+import { Navbar } from "./components/Navbar";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${quicksand.variable} ${openSans.variable}`}>
       <body className={inter.className}>
+        <Navbar />
         {children}
       </body>
     </html>

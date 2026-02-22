@@ -15,26 +15,28 @@ const usedCars = [
 
 export function UsedCars() {
   return (
-    <section className="usedcar_usedCars__gfKSs content-wrapper">
-      <h4 className="text-base sm:text-lg lg:text-2xl">Used Cars Around You</h4>
-      <div className="usedcar_carsList__X1XqF">
-        {usedCars.map((car, index) => (
-          <Link 
-            key={index} 
-            className="usedcar_carItem__LEwKP" 
-            href="/used-cars-in-delhi"
-          >
-            <div className="usedcar_carImage__BBdL9">
-              <img alt={car.name} src={car.image} />
-            </div>
-            <div className="usedcar_carspy__2wCCL">
-              <h5>{car.name}</h5>
-              <p>{car.price}</p>
-            </div>
-          </Link>
-        ))}
+    <section className="usedcar_usedCars__gfKSs w-full">
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <h4 className="text-base sm:text-lg lg:text-2xl">Used Cars Around You</h4>
+        <div className="usedcar_carsList__X1XqF">
+          {usedCars.map((car, index) => (
+            <Link 
+              key={index} 
+              className="usedcar_carItem__LEwKP" 
+              href="/used-cars-in-delhi"
+            >
+              <div className="usedcar_carImage__BBdL9">
+                <img alt={car.name} src={car.image} />
+              </div>
+              <div className="usedcar_carspy__2wCCL">
+                <h5>{car.name}</h5>
+                <p>{car.price}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="usedcar_slideArrow__z9an_ usedcar_rightArrow__Hetvq" aria-hidden>&gt;</div>
       </div>
-      <div className="usedcar_slideArrow__z9an_ usedcar_rightArrow__Hetvq" aria-hidden>&gt;</div>
     </section>
   )
 }

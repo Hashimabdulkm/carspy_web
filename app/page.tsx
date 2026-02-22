@@ -1,4 +1,3 @@
-import { Navbar } from './components/Navbar'
 import { HeroSection } from './components/HeroSection'
 import { BannerSection } from './components/BannerSection'
 import { TrendingCars } from './components/TrendingCars'
@@ -12,7 +11,6 @@ import { Footer } from './components/Footer'
 export default function Home() {
   return (
     <div className="min-h-screen bg-white min-w-0 overflow-x-hidden">
-      <Navbar />
       <HeroSection />
       <BannerSection />
       <TrendingCars />

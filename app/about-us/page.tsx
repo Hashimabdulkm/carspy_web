@@ -1,24 +1,23 @@
 import Link from 'next/link'
-import { Navbar } from '@/app/components/Navbar'
 import { Footer } from '@/app/components/Footer'
+import { PageHero } from '@/app/components/PageHero'
 import { Shield, FileText, CreditCard, Wrench, Target, Heart, Zap } from 'lucide-react'
 
 export default function AboutUsPage() {
   return (
     <div className="min-h-screen bg-white min-w-0 overflow-x-hidden">
-      <Navbar />
+      <PageHero
+        eyebrow="Who we are"
+        title={
+          <>
+            About <span className="text-[var(--pbmit-xclean-global-color)]">carspy</span>
+          </>
+        }
+        subtitle="Your trusted partner for vehicle information, RC details, challans, insurance, and more. We help millions of vehicle owners stay informed and in control."
+      />
 
-      {/* Hero */}
-      <div className="bg-primary text-white py-12 sm:py-16">
-        <div className="content-wrapper text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2">About carspy</h1>
-          <p className="text-white/90 text-sm sm:text-base max-w-2xl mx-auto">
-            Your trusted partner for vehicle information, RC details, challans, insurance, and more. We help millions of vehicle owners stay informed and in control.
-          </p>
-        </div>
-      </div>
-
-      <div className="content-wrapper py-10 sm:py-14">
+      <div className="bg-white pt-12 sm:pt-16 lg:pt-20">
+        <div className="content-wrapper pb-10 sm:pb-14">
         {/* Mission */}
         <section className="max-w-3xl mx-auto text-center mb-14 sm:mb-20">
           <h2 className="text-2xl sm:text-3xl font-semibold text-foreground mb-4">Our Mission</h2>
@@ -96,6 +95,7 @@ export default function AboutUsPage() {
             </Link>
           </div>
         </section>
+        </div>
       </div>
 
       <Footer />

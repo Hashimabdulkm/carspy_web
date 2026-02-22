@@ -13,26 +13,28 @@ const trendingCars = [
 
 export function TrendingCars() {
   return (
-    <section className="home_newCars__DMUEA content-wrapper">
-      <h4 className="text-base sm:text-lg lg:text-2xl">Trending New Cars</h4>
-      <div className="home_carsList__37U1g">
-        {trendingCars.map((car, index) => (
-          <Link 
-            key={index} 
-            className="home_carItem__1Q0kL" 
-            href={`/new-cars/${car.brand.toLowerCase()}/${car.slug}`}
-          >
-            <div className="home_carImage__4chct">
-              <img alt={car.brand} src={car.image} />
-            </div>
-            <div className="home_carspy__BlvS5">
-              <h5>{car.name}</h5>
-              <p>{car.price}</p>
-            </div>
-          </Link>
-        ))}
+    <section className="home_newCars__DMUEA w-full">
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <h4 className="text-base sm:text-lg lg:text-2xl">Trending New Cars</h4>
+        <div className="home_carsList__37U1g">
+          {trendingCars.map((car, index) => (
+            <Link 
+              key={index} 
+              className="home_carItem__1Q0kL" 
+              href={`/new-cars/${car.brand.toLowerCase()}/${car.slug}`}
+            >
+              <div className="home_carImage__4chct">
+                <img alt={car.brand} src={car.image} />
+              </div>
+              <div className="home_carspy__BlvS5">
+                <h5>{car.name}</h5>
+                <p>{car.price}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="home_slideArrow__4ilZN home_rightArrow__08Aiq" aria-hidden>&gt;</div>
       </div>
-      <div className="home_slideArrow__4ilZN home_rightArrow__08Aiq" aria-hidden>&gt;</div>
     </section>
   )
 }

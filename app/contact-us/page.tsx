@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Navbar } from '@/app/components/Navbar'
 import { Footer } from '@/app/components/Footer'
+import { PageHero } from '@/app/components/PageHero'
 import { Button } from '@/app/components/ui/button'
 import { Input } from '@/app/components/ui/input'
 import { Label } from '@/app/components/ui/label'
@@ -29,19 +29,18 @@ export default function ContactUsPage() {
 
   return (
     <div className="min-h-screen bg-white min-w-0 overflow-x-hidden">
-      <Navbar />
+      <PageHero
+        eyebrow="Get in touch"
+        title={
+          <>
+            Contact <span className="text-[var(--pbmit-xclean-global-color)]">Us</span>
+          </>
+        }
+        subtitle="Have a question or need help? We're here for you. Reach out via phone, email, or the form below."
+      />
 
-      {/* Hero */}
-      <div className="bg-primary text-white py-12 sm:py-16">
-        <div className="content-wrapper text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2">Contact Us</h1>
-          <p className="text-white/90 text-sm sm:text-base max-w-xl mx-auto">
-            Have a question or need help? We&apos;re here for you. Reach out via phone, email, or the form below.
-          </p>
-        </div>
-      </div>
-
-      <div className="content-wrapper py-10 sm:py-14">
+      <div className="bg-white pt-12 sm:pt-16 lg:pt-20">
+        <div className="content-wrapper pb-10 sm:pb-14">
         {/* Contact options */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
           <Link
@@ -179,6 +178,7 @@ export default function ContactUsPage() {
               We typically respond within 24 hours on business days. For urgent vehicle or RC-related queries, you can also use our app for instant results.
             </p>
           </div>
+        </div>
         </div>
       </div>
 
