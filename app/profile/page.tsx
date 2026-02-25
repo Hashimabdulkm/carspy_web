@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { PageHero } from '@/app/components/PageHero'
 import { Footer } from '@/app/components/Footer'
 import { Button } from '@/app/components/ui/button'
@@ -19,14 +20,9 @@ import {
   Plus,
   ChevronRight,
   Pencil,
+  LogOut,
 } from 'lucide-react'
-
-// Placeholder – replace with real auth state
-const defaultUser = {
-  name: 'Rahul Sharma',
-  email: 'rahul@example.com',
-  phone: '+91 98765 43210',
-}
+import { useAuth } from '@/app/context/AuthContext'
 
 const quickLinks = [
   { label: 'RC Details', href: '/rc-search', icon: FileText },
@@ -42,24 +38,55 @@ const savedVehicles = [
 ]
 
 export default function ProfilePage() {
+  const router = useRouter()
+  const { user: authUser, isAuthenticated, isReady, logout } = useAuth()
   const [isEditing, setIsEditing] = useState(false)
-  const [user, setUser] = useState(defaultUser)
+  const [user, setUser] = useState({ name: '', email: '', phone: '' })
+
+  useEffect(() => {
+    if (authUser) {
+      setUser({
+        name: authUser.name ?? '',
+        email: authUser.email ?? '',
+        phone: authUser.phone ?? '',
+      })
+    }
+  }, [authUser])
+
+  useEffect(() => {
+    if (isReady && !isAuthenticated) {
+      router.replace('/login')
+    }
+  }, [isReady, isAuthenticated, router])
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
     setIsEditing(false)
+    // TODO: call API to update profile if backend supports it
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const initials = user.name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
+  const handleLogout = async () => {
+    await logout()
+    router.push('/')
+  }
+
+  const displayName = authUser?.name ?? authUser?.email ?? 'User'
+  const initials = displayName
+    .split(/[\s@]/)[0]
     .slice(0, 2)
+    .toUpperCase()
+
+  if (!isReady || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white min-w-0 overflow-x-hidden">
@@ -136,10 +163,29 @@ export default function ProfilePage() {
                               <Mail className="w-4 h-4 text-gray-400" />
                               {user.email}
                             </span>
-                            <span className="flex items-center gap-2">
-                              <Phone className="w-4 h-4 text-gray-400" />
-                              {user.phone}
-                            </span>
+                            {user.phone ? (
+                              <span className="flex items-center gap-2">
+                                <Phone className="w-4 h-4 text-gray-400" />
+                                {user.phone}
+                              </span>
+                            ) : null}
+                            {authUser?.status && (
+                              <span className="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                {authUser.status}
+                              </span>
+                            )}
+                            {Array.isArray(authUser?.roles) && authUser.roles.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-1.5">
+                                {authUser.roles.map((r: { id?: number; name?: string }) => (
+                                  <span
+                                    key={r.id ?? r.name}
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
+                                  >
+                                    {r.name ?? '—'}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <Button
@@ -244,7 +290,12 @@ export default function ProfilePage() {
                 >
                   Download app
                 </Link>
-                <Button variant="outline" className="text-gray-600">
+                <Button
+                  variant="outline"
+                  className="text-gray-600"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
                   Sign out
                 </Button>
               </div>

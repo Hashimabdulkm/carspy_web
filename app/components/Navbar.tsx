@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { 
   Car, 
   FileText, 
@@ -14,7 +15,9 @@ import {
   ChevronDown,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react'
+import { useAuth } from '@/app/context/AuthContext'
 
 interface NavItem {
   label: string
@@ -23,8 +26,17 @@ interface NavItem {
 }
 
 export function Navbar() {
+  const router = useRouter()
+  const { isAuthenticated, user, logout } = useAuth()
+  const displayName = user?.name ?? user?.email?.split('@')[0] ?? null
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+
+  const handleLogout = async () => {
+    await logout()
+    setMobileMenuOpen(false)
+    router.push('/')
+  }
 
   const navItems: NavItem[] = [
     {
@@ -117,7 +129,7 @@ export function Navbar() {
           </div>
 
           {/* Right Section */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
             {/* Search Bar */}
             <div className="relative group">
               <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 rounded-full border border-transparent focus-within:border-primary/30 focus-within:bg-white transition-all duration-200 cursor-pointer hover:bg-gray-100">
@@ -126,14 +138,46 @@ export function Navbar() {
               </div>
             </div>
 
-            {/* User Icon */}
-            <Link
-              href="/profile"
-              className="p-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 inline-flex"
-              aria-label="Profile"
-            >
-              <User className="w-5 h-5" />
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                  title="My profile"
+                >
+                  <span className="p-1.5 rounded-full bg-primary/10 text-primary">
+                    <User className="w-4 h-4" />
+                  </span>
+                  {displayName && (
+                    <span className="text-sm font-medium text-gray-700 max-w-[120px] truncate hidden xl:block">
+                      {displayName}
+                    </span>
+                  )}
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="px-4 py-2.5 rounded-full bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors inline-flex"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -197,14 +241,49 @@ export function Navbar() {
             </div>
           ))}
 
-          {/* Mobile Profile / Sign In */}
-          <Link
-            href="/profile"
-            className="flex items-center gap-3 w-full px-4 py-3 mt-4 bg-primary text-white rounded-xl"
-          >
-            <User className="w-5 h-5" />
-            <span className="font-medium">My Profile</span>
-          </Link>
+          {/* Mobile Profile / Log in / Log out */}
+          {isAuthenticated ? (
+            <div className="mt-4 space-y-2">
+              <Link
+                href="/profile"
+                className="flex items-center gap-3 w-full px-4 py-3 bg-primary text-white rounded-xl"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <User className="w-5 h-5 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <span className="font-medium block">My Profile</span>
+                  {displayName && (
+                    <span className="text-sm text-white/80 truncate block">{displayName}</span>
+                  )}
+                </div>
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 font-medium rounded-xl hover:bg-gray-100"
+              >
+                <LogOut className="w-5 h-5" />
+                <span>Log out</span>
+              </button>
+            </div>
+          ) : (
+            <div className="mt-4 flex flex-col gap-2">
+              <Link
+                href="/login"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 text-gray-700 font-medium rounded-xl border border-gray-200 hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Log in
+              </Link>
+              <Link
+                href="/sign-up"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-primary text-white font-medium rounded-xl"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign up
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { LucideIcon } from 'lucide-react'
+import { useAuth } from '@/app/context/AuthContext'
 import {
   Car,
   FileText,
@@ -138,8 +139,47 @@ interface ServiceTabsProps {
   onSearch?: (tabId: string, vehicleNumber: string) => void
 }
 
+/** RC details data from POST /api/vehicle-details (ULIP vehicle-details-json) */
+interface RcDetailsData {
+  rcRegnNo?: string
+  rcRegnDt?: string
+  rcChasiNo?: string
+  rcEngNo?: string
+  rcVhClassDesc?: string
+  rcMakerDesc?: string
+  rcMakerModel?: string
+  rcBodyTypeDesc?: string
+  rcFuelDesc?: string
+  rcColor?: string
+  rcOwnerName?: string
+  rcFitUpto?: string
+  rcNormsDesc?: string
+  rcRegisteredAt?: string
+  rcStatus?: string
+  rcInsuranceComp?: string
+  rcInsuranceUpto?: string
+  [key: string]: unknown
+}
+
+const RC_DISPLAY_FIELDS: { key: keyof RcDetailsData; label: string }[] = [
+  { key: 'rcRegnNo', label: 'Registration No' },
+  { key: 'rcRegnDt', label: 'Registration Date' },
+  { key: 'rcOwnerName', label: 'Owner Name' },
+  { key: 'rcMakerModel', label: 'Maker / Model' },
+  { key: 'rcVhClassDesc', label: 'Vehicle Class' },
+  { key: 'rcFuelDesc', label: 'Fuel' },
+  { key: 'rcColor', label: 'Color' },
+  { key: 'rcChasiNo', label: 'Chassis No' },
+  { key: 'rcEngNo', label: 'Engine No' },
+  { key: 'rcFitUpto', label: 'Fitness Upto' },
+  { key: 'rcInsuranceUpto', label: 'Insurance Upto' },
+  { key: 'rcRegisteredAt', label: 'Registered At' },
+  { key: 'rcStatus', label: 'Status' },
+]
+
 export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
   const router = useRouter()
+  const { token } = useAuth()
   const tabs = tabsProp ?? defaultTabs
 
   const defaultTabId =
@@ -150,14 +190,56 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
   const [carBrand, setCarBrand] = useState('')
   const [carModel, setCarModel] = useState('')
   const [priceRange, setPriceRange] = useState<[number, number]>([0, PRICE_SLIDER_MAX])
+  const [rcDetails, setRcDetails] = useState<RcDetailsData | null>(null)
+  const [rcLoading, setRcLoading] = useState(false)
+  const [rcError, setRcError] = useState<string | null>(null)
 
   const activeTabConfig = tabs.find((t) => t.id === activeTab) ?? tabs[0]
   const showVehicleInput = activeTabConfig?.needsVehicleNumber !== false
   const showCarFilter = activeTabConfig?.useCarFilter === true
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!activeTabConfig) return
+
+    const trimmed = vehicleNumber.trim()
+
+    if (activeTab === 'rc-details' && trimmed) {
+      if (!token) {
+        setRcError('Please log in to fetch RC details.')
+        return
+      }
+      onSearch?.(activeTabConfig.id, trimmed)
+      setRcError(null)
+      setRcDetails(null)
+      setRcLoading(true)
+      try {
+        const res = await fetch('/api/vehicle-details', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ vehiclenumber: trimmed }),
+        })
+        const json = await res.json()
+        if (!res.ok) {
+          const msg = json?.data?.message ?? json?.message ?? res.statusText
+          setRcError(msg === 'Token not provided' ? 'Session expired. Please log in again.' : msg)
+          return
+        }
+        if (json.status === 'success' && json.data) {
+          setRcDetails(json.data as RcDetailsData)
+        } else {
+          setRcError(json.message || 'No data returned')
+        }
+      } catch (err) {
+        setRcError(err instanceof Error ? err.message : 'Request failed')
+      } finally {
+        setRcLoading(false)
+      }
+      return
+    }
 
     const url = new URL(activeTabConfig.href, window.location.origin)
 
@@ -174,8 +256,7 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
       return
     }
 
-    onSearch?.(activeTabConfig.id, vehicleNumber.trim())
-    const trimmed = vehicleNumber.trim()
+    onSearch?.(activeTabConfig.id, trimmed)
     if (activeTabConfig.needsVehicleNumber && trimmed) {
       url.searchParams.set('vehicle', trimmed)
       url.searchParams.set('number', trimmed)
@@ -197,11 +278,21 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
               role="tab"
               tabIndex={0}
               className={`tabs_header__5Qc_l flex-1 min-w-0 ${activeTab === tab.id ? 'tabs_active__9fSsT' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id)
+                if (tab.id !== 'rc-details') {
+                  setRcDetails(null)
+                  setRcError(null)
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
                   setActiveTab(tab.id)
+                  if (tab.id !== 'rc-details') {
+                    setRcDetails(null)
+                    setRcError(null)
+                  }
                 }
               }}
               aria-selected={activeTab === tab.id}
@@ -286,6 +377,34 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
             </>
           )}
         </form>
+
+        {activeTab === 'rc-details' && (rcLoading || rcError || rcDetails) && (
+          <div className="mt-4 p-4 rounded-lg border border-[var(--border)] bg-white min-h-[120px]">
+            {rcLoading && (
+              <div className="flex items-center justify-center gap-2 text-muted-foreground py-8">
+                <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden />
+                <span>Fetching RC details…</span>
+              </div>
+            )}
+            {rcError && !rcLoading && (
+              <p className="text-destructive text-sm py-4">{rcError}</p>
+            )}
+            {rcDetails && !rcLoading && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {RC_DISPLAY_FIELDS.map(({ key, label }) => {
+                  const value = rcDetails[key]
+                  if (value == null || value === '') return null
+                  return (
+                    <div key={key} className="flex flex-wrap gap-x-2">
+                      <span className="text-muted-foreground shrink-0">{label}:</span>
+                      <span className="font-medium">{String(value)}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
