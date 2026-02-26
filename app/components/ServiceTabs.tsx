@@ -54,6 +54,14 @@ const carFilterModels = [
 const PRICE_SLIDER_MAX = 100
 const PRICE_SLIDER_STEP = 5
 
+/** RC search: type and validation (same as backend) */
+type RcSearchType = 'vehiclenumber' | 'chasisnumber' | 'enginenumber'
+const RC_SEARCH_OPTIONS: { value: RcSearchType; label: string; pattern: RegExp; placeholder: string }[] = [
+  { value: 'vehiclenumber', label: 'Vehicle number', pattern: /^[a-zA-Z0-9]{5,11}$/, placeholder: 'e.g. UP91L0001 (5–11 chars)' },
+  { value: 'chasisnumber', label: 'Chassis number', pattern: /^[^\s]{5,24}$/, placeholder: '5–24 chars, no spaces' },
+  { value: 'enginenumber', label: 'Engine number', pattern: /^[^\s]{5,24}$/, placeholder: '5–24 chars, no spaces' },
+]
+
 export interface ServiceTabConfig {
   id: string
   label: string
@@ -193,6 +201,7 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
   const [rcDetails, setRcDetails] = useState<RcDetailsData | null>(null)
   const [rcLoading, setRcLoading] = useState(false)
   const [rcError, setRcError] = useState<string | null>(null)
+  const [rcSearchType, setRcSearchType] = useState<RcSearchType>('vehiclenumber')
 
   const activeTabConfig = tabs.find((t) => t.id === activeTab) ?? tabs[0]
   const showVehicleInput = activeTabConfig?.needsVehicleNumber !== false
@@ -209,18 +218,30 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
         setRcError('Please log in to fetch RC details.')
         return
       }
+      const option = RC_SEARCH_OPTIONS.find((o) => o.value === rcSearchType)
+      if (option && !option.pattern.test(trimmed)) {
+        setRcError(
+          option.value === 'vehiclenumber'
+            ? 'Invalid vehicle number. Use 5–11 letters or numbers.'
+            : option.value === 'chasisnumber'
+              ? 'Invalid chassis number. Use 5–24 characters with no spaces.'
+              : 'Invalid engine number. Use 5–24 characters with no spaces.'
+        )
+        return
+      }
       onSearch?.(activeTabConfig.id, trimmed)
       setRcError(null)
       setRcDetails(null)
       setRcLoading(true)
       try {
+        const body = { [rcSearchType]: trimmed } as { vehiclenumber: string } | { chasisnumber: string } | { enginenumber: string }
         const res = await fetch('/api/vehicle-details', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ vehiclenumber: trimmed }),
+          body: JSON.stringify(body),
         })
         const json = await res.json()
         if (!res.ok) {
@@ -353,6 +374,36 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
               <Button type="submit" className="bg-primary hover:bg-primary/90 w-full min-w-0 col-span-2 sm:col-span-1">
                 <Search className="w-4 h-4 mr-2" />
                 Find cars
+              </Button>
+            </div>
+          ) : activeTab === 'rc-details' ? (
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <select
+                value={rcSearchType}
+                onChange={(e) => setRcSearchType(e.target.value as RcSearchType)}
+                className="px-3 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] min-w-[140px] shrink-0"
+                aria-label="Search by"
+              >
+                {RC_SEARCH_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+              <div className="input_inputWrapper__6aRlN flex-1 min-w-0">
+                <div className="home_inputPrefixContent__BSuqO flex items-center gap-2">
+                  <p>IND</p>
+                </div>
+                <Input
+                  type="text"
+                  placeholder={RC_SEARCH_OPTIONS.find((o) => o.value === rcSearchType)?.placeholder ?? 'Enter value'}
+                  value={vehicleNumber}
+                  onChange={(e) => setVehicleNumber(e.target.value)}
+                  className="input_inputBox__cnp18 border-0 focus-visible:ring-0"
+                  aria-label={RC_SEARCH_OPTIONS.find((o) => o.value === rcSearchType)?.label ?? 'Value'}
+                />
+              </div>
+              <Button type="submit" className="bg-primary hover:bg-primary/90 shrink-0">
+                <Search className="w-4 h-4 mr-2" />
+                Search
               </Button>
             </div>
           ) : (
