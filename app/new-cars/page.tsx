@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { Filter, X } from 'lucide-react'
 import { PageHero } from '@/app/components/PageHero'
 import { Input } from '@/app/components/ui/input'
@@ -10,6 +11,8 @@ import { Card, CardContent } from '@/app/components/ui/card'
 import { Checkbox } from '@/app/components/ui/checkbox'
 import { Label } from '@/app/components/ui/label'
 import { Slider } from '@/app/components/ui/slider'
+import type { CarListing, CarsListResponse } from '@/app/lib/cars-api'
+import { buildCarsQuery, getCarDisplayName, getCarImageUrl } from '@/app/lib/cars-api'
 
 const carBrands = [
   { id: 'maruti', label: 'Maruti Suzuki', count: 45 },
@@ -55,22 +58,15 @@ const transmissionTypes = [
   { id: 'automatic', label: 'Automatic' },
 ]
 
-const newCars = [
-  { id: 1, brand: 'Mahindra', name: 'BE 6e', price: 1890000, image: '/img/home/be6Tranding.svg', type: 'suv', fuel: 'electric', transmission: 'automatic', seats: 5 },
-  { id: 2, brand: 'MG', name: 'Windsor EV', price: 1549800, image: '/img/home/windsorTranding.svg', type: 'suv', fuel: 'electric', transmission: 'automatic', seats: 5 },
-  { id: 3, brand: 'Mahindra', name: 'XEV 9e', price: 2190000, image: '/img/home/xevTranding.svg', type: 'suv', fuel: 'electric', transmission: 'automatic', seats: 5 },
-  { id: 4, brand: 'Mahindra', name: 'Thar Roxx', price: 1699000, image: '/img/home/roxTranding.svg', type: 'suv', fuel: 'diesel', transmission: 'manual', seats: 5 },
-  { id: 5, brand: 'BMW', name: 'M2', price: 9989875, image: '/img/home/m2Tranding.svg', type: 'coupe', fuel: 'petrol', transmission: 'automatic', seats: 4 },
-  { id: 6, brand: 'Toyota', name: 'Camry', price: 4616753, image: '/img/home/camreyTranding.svg', type: 'sedan', fuel: 'hybrid', transmission: 'automatic', seats: 5 },
-  { id: 7, brand: 'Hyundai', name: 'Creta', price: 1150000, image: '/img/home/creta.svg', type: 'suv', fuel: 'petrol', transmission: 'manual', seats: 5 },
-  { id: 8, brand: 'Maruti', name: 'Swift', price: 685000, image: '/img/home/swift.svg', type: 'hatchback', fuel: 'petrol', transmission: 'manual', seats: 5 },
-  { id: 9, brand: 'Tata', name: 'Nexon', price: 750000, image: '/img/home/nexon.svg', type: 'suv', fuel: 'petrol', transmission: 'manual', seats: 5 },
-  { id: 10, brand: 'Kia', name: 'Seltos', price: 1090000, image: '/img/home/seltos.svg', type: 'suv', fuel: 'petrol', transmission: 'manual', seats: 5 },
-  { id: 11, brand: 'Honda', name: 'City', price: 1185000, image: '/img/home/city.svg', type: 'sedan', fuel: 'petrol', transmission: 'manual', seats: 5 },
-  { id: 12, brand: 'Volkswagen', name: 'Virtus', price: 1125000, image: '/img/home/virtus.svg', type: 'sedan', fuel: 'petrol', transmission: 'manual', seats: 5 },
-]
+const SORT_MAP: Record<string, string> = {
+  popular: 'newest',
+  'price-low': 'price_asc',
+  'price-high': 'price_desc',
+  name: 'year_desc',
+}
 
 export default function NewCarsPage() {
+  const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [selectedBudget, setSelectedBudget] = useState<string[]>([])
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
@@ -79,6 +75,11 @@ export default function NewCarsPage() {
   const [priceRange, setPriceRange] = useState([0, 100])
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('popular')
+  const [page, setPage] = useState(1)
+  const [cars, setCars] = useState<CarListing[]>([])
+  const [meta, setMeta] = useState<CarsListResponse['meta'] | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   const toggleBrand = (brandId: string) => {
     setSelectedBrands(prev => 
@@ -120,26 +121,67 @@ export default function NewCarsPage() {
     )
   }
 
-  const filteredCars = newCars.filter(car => {
-    if (selectedBrands.length > 0 && !selectedBrands.includes(car.brand.toLowerCase())) return false
-    if (selectedTypes.length > 0 && !selectedTypes.includes(car.type)) return false
-    if (selectedFuel.length > 0 && !selectedFuel.includes(car.fuel)) return false
-    if (selectedTransmission.length > 0 && !selectedTransmission.includes(car.transmission)) return false
-    if (car.price < priceRange[0] * 100000 || car.price > priceRange[1] * 100000) return false
-    if (searchQuery && !car.name.toLowerCase().includes(searchQuery.toLowerCase()) && !car.brand.toLowerCase().includes(searchQuery.toLowerCase())) return false
-    return true
-  })
-
   const [filtersOpen, setFiltersOpen] = useState(false)
 
-  const sortedCars = [...filteredCars].sort((a, b) => {
-    switch (sortBy) {
-      case 'price-low': return a.price - b.price
-      case 'price-high': return b.price - a.price
-      case 'name': return a.name.localeCompare(b.name)
-      default: return 0
+  // Sync URL params from ServiceTabs (e.g. /new-cars?brand=hyundai&price_min=500000)
+  useEffect(() => {
+    const brand = searchParams.get('brand')
+    if (brand) setSelectedBrands([brand])
+    const pMin = searchParams.get('price_min')
+    const pMax = searchParams.get('price_max')
+    if (pMin != null || pMax != null) {
+      setPriceRange([
+        pMin ? Math.max(0, Math.min(100, Number(pMin) / 100000)) : 0,
+        pMax ? Math.max(0, Math.min(100, Number(pMax) / 100000)) : 100,
+      ])
     }
-  })
+  }, [searchParams])
+
+  const fetchCars = useCallback(async () => {
+    setLoading(true)
+    setFetchError(null)
+    const params: Record<string, unknown> = {
+      per_page: 15,
+      page,
+      sort: SORT_MAP[sortBy] ?? 'newest',
+    }
+    if (searchQuery.trim()) params.search = searchQuery.trim()
+    if (priceRange[0] > 0) params.price_min = Math.round(priceRange[0] * 100000)
+    if (priceRange[1] < 100) params.price_max = Math.round(priceRange[1] * 100000)
+    if (selectedBrands.length > 0) params.brand_id = selectedBrands.length === 1 ? selectedBrands[0] : selectedBrands
+    if (selectedTypes.length > 0) params.body_type = selectedTypes[0]
+    if (selectedFuel.length > 0) params.fuel_type = selectedFuel[0]
+    if (selectedTransmission.length > 0) params.transmission = selectedTransmission[0]
+    const query = buildCarsQuery(params)
+    try {
+      const res = await fetch(`/api/cars/new${query ? `?${query}` : ''}`)
+      const data = await res.json()
+      if (!res.ok) {
+        setFetchError((data as { message?: string }).message ?? 'Failed to load cars')
+        setCars([])
+        setMeta(null)
+        return
+      }
+      const raw = data as CarsListResponse & { data?: CarsListResponse }
+      const list = raw.data ?? raw
+      setCars(list.cars ?? [])
+      setMeta(list.meta ?? null)
+    } catch {
+      setFetchError('Failed to load cars')
+      setCars([])
+      setMeta(null)
+    } finally {
+      setLoading(false)
+    }
+  }, [page, sortBy, searchQuery, priceRange, selectedBrands, selectedTypes, selectedFuel, selectedTransmission])
+
+  useEffect(() => {
+    fetchCars()
+  }, [fetchCars])
+
+  useEffect(() => {
+    setPage(1)
+  }, [searchQuery, priceRange, selectedBrands, selectedTypes, selectedFuel, selectedTransmission])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -312,60 +354,109 @@ export default function NewCarsPage() {
 
           {/* Cars Grid */}
           <div className="flex-1 min-w-0">
-            <div className="mb-3 sm:mb-4">
-              <p className="text-sm sm:text-base text-gray-600">{sortedCars.length} cars found</p>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-              {sortedCars.map(car => (
-                <Link href={`/new-cars/${car.brand.toLowerCase()}/${car.name.toLowerCase().replace(' ', '-')}`} key={car.id}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-                    <div className="aspect-video relative bg-white flex items-center justify-center p-3 sm:p-4">
-                      <img 
-                        src={car.image} 
-                        alt={car.name}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                    <CardContent className="p-3 sm:p-4">
-                      <p className="text-xs sm:text-sm text-gray-500">{car.brand}</p>
-                      <h3 className="font-semibold text-base sm:text-lg">{car.name}</h3>
-                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
-                        <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.fuel}</span>
-                        <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.transmission}</span>
-                        <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.seats} Seats</span>
-                      </div>
-                      <p className="text-primary font-bold text-lg sm:text-xl mt-2">
-                        ₹{car.price.toLocaleString('en-IN')}
-                      </p>
-                      <Button className="w-full mt-2" size="sm">
-                        View Details
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+            <div className="mb-3 sm:mb-4 flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm sm:text-base text-gray-600">
+                {meta ? `${meta.total} cars found` : loading ? 'Loading…' : fetchError ? '' : '0 cars found'}
+              </p>
             </div>
 
-            {sortedCars.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No cars match your filters</p>
-                <Button 
-                  variant="outline" 
-                  className="mt-4"
-                  onClick={() => {
-                    setSelectedBrands([])
-                    setSelectedBudget([])
-                    setSelectedTypes([])
-                    setSelectedFuel([])
-                    setSelectedTransmission([])
-                    setPriceRange([0, 100])
-                    setSearchQuery('')
-                  }}
-                >
-                  Clear All Filters
-                </Button>
+            {fetchError && (
+              <div className="py-8 text-center">
+                <p className="text-destructive mb-4">{fetchError}</p>
+                <Button variant="outline" onClick={() => fetchCars()}>Try again</Button>
               </div>
+            )}
+
+            {loading && !fetchError && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Card key={i} className="overflow-hidden">
+                    <div className="aspect-video bg-gray-100 animate-pulse" />
+                    <CardContent className="p-4 space-y-2">
+                      <div className="h-4 bg-gray-100 rounded animate-pulse w-2/3" />
+                      <div className="h-5 bg-gray-100 rounded animate-pulse w-1/2" />
+                      <div className="h-6 bg-gray-100 rounded animate-pulse w-1/3 mt-2" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {!loading && !fetchError && (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                  {cars.map((car) => {
+                    const name = getCarDisplayName(car)
+                    const imageUrl = getCarImageUrl(car)
+                    return (
+                      <Link href={`/cars/${car.id}`} key={car.id}>
+                        <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+                          <div className="aspect-video relative bg-white flex items-center justify-center p-3 sm:p-4">
+                            {imageUrl ? (
+                              <img src={imageUrl} alt={name} className="max-w-full max-h-full object-contain" />
+                            ) : (
+                              <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm">No image</div>
+                            )}
+                          </div>
+                          <CardContent className="p-3 sm:p-4">
+                            <p className="text-xs sm:text-sm text-gray-500">{car.vehicleModel?.brand?.name ?? '—'}</p>
+                            <h3 className="font-semibold text-base sm:text-lg">{name}</h3>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
+                              {car.fuel_type && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.fuel_type}</span>}
+                              {car.transmission && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.transmission}</span>}
+                              {car.seating_capacity != null && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.seating_capacity} Seats</span>}
+                            </div>
+                            {car.price != null && (
+                              <p className="text-primary font-bold text-lg sm:text-xl mt-2">
+                                ₹{car.price.toLocaleString('en-IN')}
+                              </p>
+                            )}
+                            <Button className="w-full mt-2" size="sm">
+                              View Details
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </Link>
+                    )
+                  })}
+                </div>
+
+                {meta && meta.last_page > 1 && (
+                  <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
+                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+                      Previous
+                    </Button>
+                    <span className="text-sm text-gray-600 px-2">
+                      Page {meta.current_page} of {meta.last_page}
+                    </span>
+                    <Button variant="outline" size="sm" disabled={page >= meta.last_page} onClick={() => setPage((p) => p + 1)}>
+                      Next
+                    </Button>
+                  </div>
+                )}
+
+                {cars.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">No cars match your filters</p>
+                    <Button
+                      variant="outline"
+                      className="mt-4"
+                      onClick={() => {
+                        setSelectedBrands([])
+                        setSelectedBudget([])
+                        setSelectedTypes([])
+                        setSelectedFuel([])
+                        setSelectedTransmission([])
+                        setPriceRange([0, 100])
+                        setSearchQuery('')
+                        setPage(1)
+                      }}
+                    >
+                      Clear All Filters
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

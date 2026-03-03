@@ -15,6 +15,7 @@ export default function SignUpPage() {
   const { register, isAuthenticated } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [error, setError] = useState('')
@@ -36,6 +37,7 @@ export default function SignUpPage() {
     const result = await register({
       name,
       email,
+      phone: phone || undefined,
       password,
       password_confirmation: passwordConfirmation,
     })
@@ -80,6 +82,18 @@ export default function SignUpPage() {
                 onChange={(e) => setName(e.target.value)}
                 required
                 autoComplete="name"
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="signup-phone">Phone number</Label>
+              <Input
+                id="signup-phone"
+                type="tel"
+                placeholder="+91 98765 43210"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                autoComplete="tel"
                 className="mt-1.5"
               />
             </div>

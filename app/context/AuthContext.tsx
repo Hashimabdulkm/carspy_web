@@ -31,8 +31,14 @@ interface AuthContextValue extends AuthState {
   register: (params: {
     name: string
     email: string
+    phone?: string
     password: string
     password_confirmation: string
+  }) => Promise<{ error?: string }>
+  updateProfile: (updates: {
+    name?: string
+    email?: string
+    phone?: string | null
   }) => Promise<{ error?: string }>
   logout: () => Promise<void>
   isAuthenticated: boolean
@@ -151,6 +157,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (params: {
       name: string
       email: string
+      phone?: string
       password: string
       password_confirmation: string
     }) => {
@@ -172,7 +179,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             : typeof data.token === 'string'
               ? data.token
               : null
-      const user = data.user ?? { email: params.email, name: params.name }
+      const user =
+        data.user ??
+        ({
+          email: params.email,
+          name: params.name,
+          phone: params.phone ?? null,
+        } as AuthUser)
       if (token) {
         persist(token, user)
         setState({ token, user, isReady: true })
@@ -202,10 +215,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setState({ token: null, user: null, isReady: true })
   }, [])
 
+  const updateProfile = useCallback(
+    async (updates: { name?: string; email?: string; phone?: string | null }) => {
+      if (!state.token) {
+        return { error: 'Not authenticated' }
+      }
+      const res = await fetch('/api/auth/me', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${state.token}`,
+        },
+        body: JSON.stringify(updates),
+      })
+      const raw = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        return { error: raw.message || 'Failed to update profile' }
+      }
+      const user = raw.data?.user ?? raw.user
+      if (user && typeof user === 'object') {
+        persist(state.token, user as AuthUser)
+        setState((prev) => ({ ...prev, user: user as AuthUser }))
+      }
+      return {}
+    },
+    [state.token]
+  )
+
   const value: AuthContextValue = {
     ...state,
     login,
     register,
+    updateProfile,
     logout,
     isAuthenticated: !!state.token,
   }

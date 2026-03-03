@@ -39,9 +39,11 @@ const savedVehicles = [
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { user: authUser, isAuthenticated, isReady, logout } = useAuth()
+  const { user: authUser, isAuthenticated, isReady, logout, updateProfile } = useAuth()
   const [isEditing, setIsEditing] = useState(false)
   const [user, setUser] = useState({ name: '', email: '', phone: '' })
+  const [saveError, setSaveError] = useState('')
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     if (authUser) {
@@ -59,10 +61,30 @@ export default function ProfilePage() {
     }
   }, [isReady, isAuthenticated, router])
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!authUser) return
+    setSaveError('')
+
+    const updates: { name?: string; email?: string; phone?: string | null } = {}
+    if (user.name !== (authUser.name ?? '')) updates.name = user.name
+    if (user.email !== (authUser.email ?? '')) updates.email = user.email
+    if (user.phone !== (authUser.phone ?? '')) updates.phone = user.phone || null
+
+    // Nothing changed
+    if (Object.keys(updates).length === 0) {
+      setIsEditing(false)
+      return
+    }
+
+    setSaving(true)
+    const result = await updateProfile(updates)
+    setSaving(false)
+    if (result.error) {
+      setSaveError(result.error)
+      return
+    }
     setIsEditing(false)
-    // TODO: call API to update profile if backend supports it
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +134,11 @@ export default function ProfilePage() {
                 <div className="flex-1 min-w-0">
                   {isEditing ? (
                     <form onSubmit={handleSave} className="space-y-4">
+                      {saveError && (
+                        <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+                          {saveError}
+                        </div>
+                      )}
                       <div>
                         <Label htmlFor="name" className="text-foreground">Name</Label>
                         <Input
@@ -145,7 +172,9 @@ export default function ProfilePage() {
                         />
                       </div>
                       <div className="flex gap-2 pt-2">
-                        <Button type="submit">Save changes</Button>
+                        <Button type="submit" disabled={saving}>
+                          {saving ? 'Saving…' : 'Save changes'}
+                        </Button>
                         <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
                           Cancel
                         </Button>
