@@ -6,6 +6,8 @@ import { useParams } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/app/components/ui/button'
 import { Card, CardContent } from '@/app/components/ui/card'
+import { AddPhoneModal } from '@/app/components/AddPhoneModal'
+import { LoginModal } from '@/app/components/LoginModal'
 import { useAuth } from '@/app/context/AuthContext'
 import type { CarListing } from '@/app/lib/cars-api'
 import { getCarDisplayName, getCarImageUrl } from '@/app/lib/cars-api'
@@ -17,6 +19,9 @@ export default function CarDetailPage() {
   const [car, setCar] = useState<CarListing | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showPhoneModal, setShowPhoneModal] = useState(false)
+  const [leadStatus, setLeadStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle')
+  const [leadError, setLeadError] = useState<string | null>(null)
   const leadSentRef = useRef(false)
 
   // Derive error when we don't need to fetch (avoid setState in effect)
@@ -85,6 +90,11 @@ export default function CarDetailPage() {
       whatsapp_number: user.phone ?? undefined,
     }
 
+    queueMicrotask(() => {
+      setLeadStatus('pending')
+      setLeadError(null)
+    })
+
     fetch('/api/leads', {
       method: 'POST',
       headers: {
@@ -93,9 +103,36 @@ export default function CarDetailPage() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
-    }).catch(() => {
-      // ignore lead errors on UI
     })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}))
+        if (res.ok) {
+          setLeadStatus('success')
+          return
+        }
+
+        const msg = (data as { message?: string }).message ?? ''
+        const errors = (data as { errors?: { phone_number?: string[] } }).errors
+        const isPhoneRequired =
+          /phone number.*required/i.test(msg) ||
+          (Array.isArray(errors?.phone_number) && errors.phone_number.length > 0)
+
+        if (isPhoneRequired) {
+          leadSentRef.current = false
+          setShowPhoneModal(true)
+          setLeadStatus('error')
+          setLeadError('Please add your phone number to continue.')
+        } else {
+          leadSentRef.current = false
+          setLeadStatus('error')
+          setLeadError(msg || 'Failed to register your interest for this car.')
+        }
+      })
+      .catch(() => {
+        leadSentRef.current = false
+        setLeadStatus('error')
+        setLeadError('Failed to register your interest. Please try again.')
+      })
   }, [car?.id, token, user])
 
   if (isFetching) {
@@ -114,17 +151,24 @@ export default function CarDetailPage() {
     )
   }
 
+  // Valid id but not logged in: show page with reusable login modal
+  if (id && !token) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
+          <p className="text-muted-foreground mb-6">Log in to view this listing.</p>
+        </div>
+        <LoginModal title="Log in to view this listing" />
+      </div>
+    )
+  }
+
+  // Other errors (invalid id, car not found, fetch error)
   if (derivedError || !car) {
-    const isAuthError = derivedError?.toLowerCase().includes('log in') ?? false
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
           <p className="text-destructive text-lg mb-4">{derivedError ?? 'Car not found'}</p>
-          {isAuthError && (
-            <Link href="/login" className="inline-block mb-3">
-              <Button>Log in</Button>
-            </Link>
-          )}
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/new-cars">
               <Button variant="outline">Browse new cars</Button>
@@ -134,6 +178,72 @@ export default function CarDetailPage() {
             </Link>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  // Car is loaded but lead has not yet succeeded – gate the detail view on /api/leads 200
+  if (leadStatus === 'idle' || leadStatus === 'pending') {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+          <div className="flex flex-col items-center justify-center py-16 gap-4">
+            <span className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <p className="text-sm text-muted-foreground">
+              Registering your interest for this car…
+            </p>
+          </div>
+        </div>
+        {showPhoneModal && (
+          <AddPhoneModal
+            title="Add phone number"
+            onSuccess={() => {
+              setShowPhoneModal(false)
+              setLeadStatus('idle')
+            }}
+          />
+        )}
+      </div>
+    )
+  }
+
+  // Lead failed for a non-phone reason – show error instead of details
+  if (leadStatus === 'error' && !showPhoneModal) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
+          <p className="text-destructive text-lg mb-4">
+            {leadError ?? 'We could not register your interest for this car.'}
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/new-cars">
+              <Button variant="outline">Browse new cars</Button>
+            </Link>
+            <Link href="/used-cars">
+              <Button variant="outline">Browse used cars</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Phone modal open: show neutral background only (no car card behind modal)
+  if (showPhoneModal) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+          <div className="flex flex-col items-center justify-center py-16 gap-4">
+            <p className="text-sm text-muted-foreground">Add your phone number to continue viewing this listing.</p>
+          </div>
+        </div>
+        <AddPhoneModal
+          title="Add phone number"
+          onSuccess={() => {
+            setShowPhoneModal(false)
+            setLeadStatus('idle')
+          }}
+        />
       </div>
     )
   }
