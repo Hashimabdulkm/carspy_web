@@ -62,6 +62,15 @@ export interface OldCarsParams extends NewCarsParams {
   sort?: NewCarsParams['sort'] | 'mileage_asc' | 'mileage_desc'
 }
 
+export interface CarsFiltersResponse {
+  brands: { id: number; name: string }[]
+  vehicle_models: { id: number; name: string; brand_id: number; category_id: number }[]
+  categories: { id: number; name: string }[]
+  transmissions: string[]
+  fuel_types: string[]
+  body_types: string[]
+}
+
 export function buildCarsQuery(params: Record<string, unknown>): string {
   const q = new URLSearchParams()
   Object.entries(params).forEach(([key, value]) => {

@@ -11,48 +11,8 @@ import { Card, CardContent } from '@/app/components/ui/card'
 import { Checkbox } from '@/app/components/ui/checkbox'
 import { Label } from '@/app/components/ui/label'
 import { Slider } from '@/app/components/ui/slider'
-import type { CarListing, CarsListResponse } from '@/app/lib/cars-api'
+import type { CarListing, CarsFiltersResponse, CarsListResponse } from '@/app/lib/cars-api'
 import { buildCarsQuery, getCarDisplayName, getCarImageUrl } from '@/app/lib/cars-api'
-
-const carBrands = [
-  { id: 'maruti', label: 'Maruti Suzuki', count: 156 },
-  { id: 'hyundai', label: 'Hyundai', count: 98 },
-  { id: 'honda', label: 'Honda', count: 67 },
-  { id: 'tata', label: 'Tata', count: 54 },
-  { id: 'toyota', label: 'Toyota', count: 45 },
-  { id: 'mahindra', label: 'Mahindra', count: 38 },
-  { id: 'vw', label: 'Volkswagen', count: 29 },
-  { id: 'ford', label: 'Ford', count: 24 },
-  { id: 'kia', label: 'Kia', count: 18 },
-  { id: 'mg', label: 'MG', count: 15 },
-]
-
-const budgetRanges = [
-  { id: '1-3', label: '₹1 - 3 Lakh', min: 1, max: 3 },
-  { id: '3-5', label: '₹3 - 5 Lakh', min: 3, max: 5 },
-  { id: '5-10', label: '₹5 - 10 Lakh', min: 5, max: 10 },
-  { id: '10-15', label: '₹10 - 15 Lakh', min: 10, max: 15 },
-  { id: '15-25', label: '₹15 - 25 Lakh', min: 15, max: 25 },
-  { id: '25+', label: '₹25 Lakh+', min: 25, max: 100 },
-]
-
-const vehicleTypes = [
-  { id: 'suv', label: 'SUV', icon: '🚙' },
-  { id: 'sedan', label: 'Sedan', icon: '🚗' },
-  { id: 'hatchback', label: 'Hatchback', icon: '🚙' },
-  { id: 'mpv', label: 'MPV', icon: '🚐' },
-]
-
-const fuelTypes = [
-  { id: 'petrol', label: 'Petrol' },
-  { id: 'diesel', label: 'Diesel' },
-  { id: 'cng', label: 'CNG' },
-]
-
-const transmissionTypes = [
-  { id: 'manual', label: 'Manual' },
-  { id: 'automatic', label: 'Automatic' },
-]
 
 const yearRanges = [
   { id: '2024', label: '2024 & Above' },
@@ -62,43 +22,41 @@ const yearRanges = [
   { id: '2020', label: '2020 & Above' },
 ]
 
-const cities = [
-  { id: 'delhi', label: 'Delhi NCR', count: 245 },
-  { id: 'mumbai', label: 'Mumbai', count: 189 },
-  { id: 'bangalore', label: 'Bangalore', count: 156 },
-  { id: 'hyderabad', label: 'Hyderabad', count: 98 },
-  { id: 'chennai', label: 'Chennai', count: 87 },
-  { id: 'pune', label: 'Pune', count: 76 },
-]
-
 const OLD_SORT_MAP: Record<string, string> = {
-  relevance: 'newest',
-  'price-low': 'price_asc',
-  'price-high': 'price_desc',
-  'km-low': 'mileage_asc',
-  'km-high': 'mileage_desc',
-  newest: 'year_desc',
+  newest: 'newest',
+  'price-asc': 'price_asc',
+  'price-desc': 'price_desc',
+  'year-asc': 'year_asc',
+  'year-desc': 'year_desc',
+  'mileage-asc': 'mileage_asc',
+  'mileage-desc': 'mileage_desc',
 }
 
 export default function UsedCarsPage() {
   const searchParams = useSearchParams()
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<number[]>([])
+  const [selectedModelId, setSelectedModelId] = useState<number | ''>('')
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | ''>('')
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
   const [selectedFuel, setSelectedFuel] = useState<string[]>([])
   const [selectedTransmission, setSelectedTransmission] = useState<string[]>([])
-  const [selectedCities, setSelectedCities] = useState<string[]>([])
   const [selectedYears, setSelectedYears] = useState<string[]>([])
+  const [yearMax, setYearMax] = useState('')
+  const [seatingCapacity, setSeatingCapacity] = useState('')
+  const [engineCapacityMin, setEngineCapacityMin] = useState('')
+  const [engineCapacityMax, setEngineCapacityMax] = useState('')
   const [priceRange, setPriceRange] = useState([0, 100])
   const [mileageRange, setMileageRange] = useState([0, 200])
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState('relevance')
+  const [sortBy, setSortBy] = useState('newest')
   const [page, setPage] = useState(1)
   const [cars, setCars] = useState<CarListing[]>([])
   const [meta, setMeta] = useState<CarsListResponse['meta'] | null>(null)
+  const [filters, setFilters] = useState<CarsFiltersResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [fetchError, setFetchError] = useState<string | null>(null)
 
-  const toggleBrand = (brandId: string) => {
+  const toggleBrand = (brandId: number) => {
     setSelectedBrands(prev => 
       prev.includes(brandId) 
         ? prev.filter(b => b !== brandId)
@@ -130,14 +88,6 @@ export default function UsedCarsPage() {
     )
   }
 
-  const toggleCity = (cityId: string) => {
-    setSelectedCities(prev => 
-      prev.includes(cityId) 
-        ? prev.filter(c => c !== cityId)
-        : [...prev, cityId]
-    )
-  }
-
   const toggleYear = (yearId: string) => {
     setSelectedYears(prev => 
       prev.includes(yearId) 
@@ -147,8 +97,8 @@ export default function UsedCarsPage() {
   }
 
   useEffect(() => {
-    const brand = searchParams.get('brand')
-    if (brand) setSelectedBrands([brand])
+    const brandId = searchParams.get('brand_id')
+    if (brandId && !Number.isNaN(Number(brandId))) setSelectedBrands([Number(brandId)])
     const pMin = searchParams.get('price_min')
     const pMax = searchParams.get('price_max')
     if (pMin != null || pMax != null) {
@@ -173,10 +123,16 @@ export default function UsedCarsPage() {
     if (mileageRange[0] > 0) params.mileage_min = mileageRange[0] * 1000
     if (mileageRange[1] < 200) params.mileage_max = mileageRange[1] * 1000
     if (selectedBrands.length > 0) params.brand_id = selectedBrands.length === 1 ? selectedBrands[0] : selectedBrands
+    if (selectedModelId !== '') params.vehicle_model_id = selectedModelId
+    if (selectedCategoryId !== '') params.category_id = selectedCategoryId
     if (selectedTypes.length > 0) params.body_type = selectedTypes[0]
     if (selectedFuel.length > 0) params.fuel_type = selectedFuel[0]
     if (selectedTransmission.length > 0) params.transmission = selectedTransmission[0]
     if (selectedYears.length > 0) params.year_min = Number(selectedYears[0])
+    if (yearMax.trim()) params.year_max = Number(yearMax)
+    if (seatingCapacity.trim()) params.seating_capacity = Number(seatingCapacity)
+    if (engineCapacityMin.trim()) params.engine_capacity_min = Number(engineCapacityMin)
+    if (engineCapacityMax.trim()) params.engine_capacity_max = Number(engineCapacityMax)
     const query = buildCarsQuery(params)
     try {
       const res = await fetch(`/api/cars/old${query ? `?${query}` : ''}`)
@@ -198,15 +154,32 @@ export default function UsedCarsPage() {
     } finally {
       setLoading(false)
     }
-  }, [page, sortBy, searchQuery, priceRange, mileageRange, selectedBrands, selectedTypes, selectedFuel, selectedTransmission, selectedYears])
+  }, [page, sortBy, searchQuery, priceRange, mileageRange, selectedBrands, selectedModelId, selectedCategoryId, selectedTypes, selectedFuel, selectedTransmission, selectedYears, yearMax, seatingCapacity, engineCapacityMin, engineCapacityMax])
 
   useEffect(() => {
     fetchCars()
   }, [fetchCars])
 
   useEffect(() => {
+    fetch('/api/cars/filters?type=old')
+      .then((res) => res.json())
+      .then((data) => {
+        const raw = data as CarsFiltersResponse & { data?: CarsFiltersResponse }
+        setFilters(raw.data ?? raw)
+      })
+      .catch(() => setFilters(null))
+  }, [])
+
+  useEffect(() => {
     setPage(1)
-  }, [searchQuery, priceRange, mileageRange, selectedBrands, selectedTypes, selectedFuel, selectedTransmission, selectedYears])
+  }, [searchQuery, priceRange, mileageRange, selectedBrands, selectedModelId, selectedCategoryId, selectedTypes, selectedFuel, selectedTransmission, selectedYears, yearMax, seatingCapacity, engineCapacityMin, engineCapacityMax])
+
+  const brands = filters?.brands ?? []
+  const modelOptions = filters?.vehicle_models ?? []
+  const categoryOptions = filters?.categories ?? []
+  const fuelTypes = filters?.fuel_types ?? []
+  const transmissionTypes = filters?.transmissions ?? []
+  const bodyTypes = filters?.body_types ?? []
 
   const [filtersOpen, setFiltersOpen] = useState(false)
 
@@ -246,12 +219,13 @@ export default function UsedCarsPage() {
               onChange={(e) => setSortBy(e.target.value)}
               className="px-3 sm:px-4 py-2 border rounded-md text-sm flex-1 sm:flex-initial min-w-0"
             >
-              <option value="relevance">Most Relevant</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="km-low">Kilometers: Low to High</option>
-              <option value="km-high">Kilometers: High to Low</option>
-              <option value="newest">Year: Newest First</option>
+              <option value="newest">Newest</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="year-asc">Year: Old to New</option>
+              <option value="year-desc">Year: New to Old</option>
+              <option value="mileage-asc">Mileage: Low to High</option>
+              <option value="mileage-desc">Mileage: High to Low</option>
             </select>
           </div>
         </div>
@@ -300,31 +274,11 @@ export default function UsedCarsPage() {
                   </div>
                 </div>
 
-                {/* City */}
-                <div className="mb-6">
-                  <Label className="mb-2 block">City</Label>
-                  <div className="space-y-2">
-                    {cities.map(city => (
-                      <div key={city.id} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={`city-${city.id}`}
-                          checked={selectedCities.includes(city.id)}
-                          onCheckedChange={() => toggleCity(city.id)}
-                        />
-                        <Label htmlFor={`city-${city.id}`} className="text-sm cursor-pointer flex-1">
-                          {city.label}
-                        </Label>
-                        <span className="text-xs text-gray-500">({city.count})</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Brand */}
                 <div className="mb-6">
                   <Label className="mb-2 block">Brand</Label>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {carBrands.map(brand => (
+                    {brands.map((brand) => (
                       <div key={brand.id} className="flex items-center space-x-2">
                         <Checkbox 
                           id={`brand-${brand.id}`}
@@ -332,12 +286,39 @@ export default function UsedCarsPage() {
                           onCheckedChange={() => toggleBrand(brand.id)}
                         />
                         <Label htmlFor={`brand-${brand.id}`} className="text-sm cursor-pointer flex-1">
-                          {brand.label}
+                          {brand.name}
                         </Label>
-                        <span className="text-xs text-gray-500">({brand.count})</span>
                       </div>
                     ))}
                   </div>
+                </div>
+
+                <div className="mb-6">
+                  <Label className="mb-2 block">Model</Label>
+                  <select
+                    value={selectedModelId}
+                    onChange={(e) => setSelectedModelId(e.target.value ? Number(e.target.value) : '')}
+                    className="w-full px-3 py-2 border rounded-md text-sm bg-white"
+                  >
+                    <option value="">All models</option>
+                    {modelOptions.map((m) => (
+                      <option key={m.id} value={m.id}>{m.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-6">
+                  <Label className="mb-2 block">Category</Label>
+                  <select
+                    value={selectedCategoryId}
+                    onChange={(e) => setSelectedCategoryId(e.target.value ? Number(e.target.value) : '')}
+                    className="w-full px-3 py-2 border rounded-md text-sm bg-white"
+                  >
+                    <option value="">All categories</option>
+                    {categoryOptions.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Year */}
@@ -359,19 +340,58 @@ export default function UsedCarsPage() {
                   </div>
                 </div>
 
+                <div className="mb-6">
+                  <Label className="mb-2 block">Body Type</Label>
+                  <div className="space-y-2">
+                    {bodyTypes.map((type) => (
+                      <div key={type} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`used-body-${type}`}
+                          checked={selectedTypes.includes(type)}
+                          onCheckedChange={() => toggleType(type)}
+                        />
+                        <Label htmlFor={`used-body-${type}`} className="text-sm cursor-pointer">
+                          {type}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <Label className="mb-2 block">Year max</Label>
+                  <Input value={yearMax} onChange={(e) => setYearMax(e.target.value)} placeholder="e.g. 2025" />
+                </div>
+
+                <div className="mb-6">
+                  <Label className="mb-2 block">Seating capacity</Label>
+                  <Input value={seatingCapacity} onChange={(e) => setSeatingCapacity(e.target.value)} placeholder="e.g. 5" />
+                </div>
+
+                <div className="mb-6 grid grid-cols-2 gap-2">
+                  <div>
+                    <Label className="mb-2 block">Engine min (cc)</Label>
+                    <Input value={engineCapacityMin} onChange={(e) => setEngineCapacityMin(e.target.value)} placeholder="e.g. 1000" />
+                  </div>
+                  <div>
+                    <Label className="mb-2 block">Engine max (cc)</Label>
+                    <Input value={engineCapacityMax} onChange={(e) => setEngineCapacityMax(e.target.value)} placeholder="e.g. 2500" />
+                  </div>
+                </div>
+
                 {/* Fuel Type */}
                 <div className="mb-6">
                   <Label className="mb-2 block">Fuel Type</Label>
                   <div className="space-y-2">
-                    {fuelTypes.map(fuel => (
-                      <div key={fuel.id} className="flex items-center space-x-2">
+                    {fuelTypes.map((fuel) => (
+                      <div key={fuel} className="flex items-center space-x-2">
                         <Checkbox 
-                          id={`fuel-used-${fuel.id}`}
-                          checked={selectedFuel.includes(fuel.id)}
-                          onCheckedChange={() => toggleFuel(fuel.id)}
+                          id={`fuel-used-${fuel}`}
+                          checked={selectedFuel.includes(fuel)}
+                          onCheckedChange={() => toggleFuel(fuel)}
                         />
-                        <Label htmlFor={`fuel-used-${fuel.id}`} className="text-sm cursor-pointer">
-                          {fuel.label}
+                        <Label htmlFor={`fuel-used-${fuel}`} className="text-sm cursor-pointer">
+                          {fuel}
                         </Label>
                       </div>
                     ))}
@@ -382,15 +402,15 @@ export default function UsedCarsPage() {
                 <div className="mb-6">
                   <Label className="mb-2 block">Transmission</Label>
                   <div className="space-y-2">
-                    {transmissionTypes.map(trans => (
-                      <div key={trans.id} className="flex items-center space-x-2">
+                    {transmissionTypes.map((trans) => (
+                      <div key={trans} className="flex items-center space-x-2">
                         <Checkbox 
-                          id={`trans-used-${trans.id}`}
-                          checked={selectedTransmission.includes(trans.id)}
-                          onCheckedChange={() => toggleTransmission(trans.id)}
+                          id={`trans-used-${trans}`}
+                          checked={selectedTransmission.includes(trans)}
+                          onCheckedChange={() => toggleTransmission(trans)}
                         />
-                        <Label htmlFor={`trans-used-${trans.id}`} className="text-sm cursor-pointer">
-                          {trans.label}
+                        <Label htmlFor={`trans-used-${trans}`} className="text-sm cursor-pointer">
+                          {trans}
                         </Label>
                       </div>
                     ))}
@@ -403,11 +423,16 @@ export default function UsedCarsPage() {
                   className="w-full"
                   onClick={() => {
                     setSelectedBrands([])
+                    setSelectedModelId('')
+                    setSelectedCategoryId('')
                     setSelectedTypes([])
                     setSelectedFuel([])
                     setSelectedTransmission([])
-                    setSelectedCities([])
                     setSelectedYears([])
+                    setYearMax('')
+                    setSeatingCapacity('')
+                    setEngineCapacityMin('')
+                    setEngineCapacityMax('')
                     setPriceRange([0, 100])
                     setMileageRange([0, 200])
                     setSearchQuery('')
@@ -516,11 +541,16 @@ export default function UsedCarsPage() {
                       className="mt-4"
                       onClick={() => {
                         setSelectedBrands([])
+                        setSelectedModelId('')
+                        setSelectedCategoryId('')
                         setSelectedTypes([])
                         setSelectedFuel([])
                         setSelectedTransmission([])
-                        setSelectedCities([])
                         setSelectedYears([])
+                        setYearMax('')
+                        setSeatingCapacity('')
+                        setEngineCapacityMin('')
+                        setEngineCapacityMax('')
                         setPriceRange([0, 100])
                         setMileageRange([0, 200])
                         setSearchQuery('')
