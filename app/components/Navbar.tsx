@@ -62,17 +62,6 @@ export function Navbar() {
         { label: 'Bike Insurance', href: '/bike-insurance', icon: <Bike className="w-4 h-4" /> },
       ]
     },
-    { label: 'carspy For Business', href: '/partner-form?utm_medium=nav_bar' },
-    { label: 'Contact Us', href: '/contact-us?utm_medium=nav_bar' },
-    {
-      label: 'More',
-      children: [
-        { label: 'Sell Car', href: '/sell-car', icon: <Car className="w-4 h-4" /> },
-        { label: 'Loans', href: '/loans', icon: <CreditCard className="w-4 h-4" /> },
-        { label: 'Blog', href: '/blog', icon: <FileText className="w-4 h-4" /> },
-        { label: 'About Us', href: '/about-us', icon: <User className="w-4 h-4" /> },
-      ]
-    },
   ]
 
   return (

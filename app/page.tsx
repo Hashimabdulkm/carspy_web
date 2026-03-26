@@ -4,7 +4,7 @@ import { TrendingCars } from './components/TrendingCars'
 import { UsedCars } from './components/UsedCars'
 import { CustomerReviews } from './components/CustomerReviews'
 import { CuratedServices } from './components/CuratedServices'
-import { BlogSection } from './components/BlogSection'
+// import { BlogSection } from './components/BlogSection'
 import { GetInTouch } from './components/GetInTouch'
 import { Footer } from './components/Footer'
 
@@ -17,7 +17,7 @@ export default function Home() {
       <UsedCars />
       <CustomerReviews />
       <CuratedServices />
-      <BlogSection />
+      {/* <BlogSection /> */}
       <GetInTouch />
       <Footer />
     </div>
