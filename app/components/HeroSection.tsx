@@ -21,7 +21,7 @@ export function HeroSection() {
         <div className="content-wrapper relative z-10 pt-10 pb-14 sm:pt-14 sm:pb-16 lg:pt-16 lg:pb-20">
           <div className="max-w-4xl mx-auto text-center pt-6 sm:pt-8 lg:pt-10">
             <p className="text-[var(--pbmit-xclean-global-color)] text-sm font-semibold uppercase tracking-wider mb-3 sm:mb-4">
-              Vehicle info & RTO services
+              Vehicle Information Services
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
               Your virtual
@@ -29,7 +29,7 @@ export function HeroSection() {
               <span className="text-[var(--pbmit-xclean-global-color)]">car assistant</span>
             </h1>
             <p className="mt-4 sm:mt-5 text-gray-300 text-base sm:text-lg max-w-xl mx-auto">
-              RC details, challans, insurance & service history — all in one place.
+              Choose. Cruise. Care. All in one place.
             </p>
 
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">

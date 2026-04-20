@@ -53,13 +53,13 @@ export function Navbar() {
         { label: 'Used Cars', href: '/used-cars', icon: <Car className="w-4 h-4" /> },
       ]
     },
-    {
-      label: 'Insurance',
-      children: [
-        { label: 'Car Insurance', href: '/car-insurance', icon: <Car className="w-4 h-4" /> },
-        { label: 'Bike Insurance', href: '/bike-insurance', icon: <Bike className="w-4 h-4" /> },
-      ]
-    },
+    // {
+    //   label: 'Insurance',
+    //   children: [
+    //     { label: 'Car Insurance', href: '/car-insurance', icon: <Car className="w-4 h-4" /> },
+    //     { label: 'Bike Insurance', href: '/bike-insurance', icon: <Bike className="w-4 h-4" /> },
+    //   ]
+    // },
   ]
 
   return (
@@ -71,12 +71,12 @@ export function Navbar() {
             <img
               src="/Add%20a%20heading.svg"
               alt="carspy logo"
-              className="h-20 lg:h-24 w-auto object-contain"
+              className="h-40 lg:h-40 w-auto object-contain"
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-1 lg:-ml-76">
             {navItems.map((item, idx) => (
               <div 
                 key={idx}
