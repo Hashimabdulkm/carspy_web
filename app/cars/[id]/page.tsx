@@ -194,14 +194,50 @@ export default function CarDetailPage() {
 
   if (isFetching) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-gray-200 rounded w-48" />
-            <div className="aspect-video bg-gray-200 rounded-lg" />
-            <div className="h-6 bg-gray-200 rounded w-3/4" />
-            <div className="h-4 bg-gray-200 rounded w-full" />
-            <div className="h-4 bg-gray-200 rounded w-2/3" />
+      <div className="min-h-screen bg-gray-50 py-6 sm:py-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="animate-pulse">
+            <div className="h-5 w-32 bg-gray-200 rounded mb-6" />
+
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+              <div className="xl:col-span-8 rounded-xl border border-gray-200 bg-white overflow-hidden">
+                <div className="aspect-video sm:aspect-[16/8] bg-gray-200" />
+                <div className="border-t bg-white px-3 py-3 sm:px-4">
+                  <div className="mx-auto flex w-full max-w-3xl gap-2 overflow-hidden rounded-xl bg-gray-50 p-2">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="w-20 sm:w-24 aspect-video rounded-lg bg-gray-200 flex-shrink-0" />
+                    ))}
+                  </div>
+                </div>
+                <div className="p-6 sm:p-7">
+                  <div className="h-4 w-28 bg-gray-200 rounded mb-3" />
+                  <div className="h-8 w-3/4 bg-gray-200 rounded mb-4" />
+                  <div className="h-7 w-40 bg-gray-200 rounded mb-5" />
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="h-7 w-20 bg-gray-200 rounded" />
+                    ))}
+                  </div>
+                  <div className="pt-6 border-t border-gray-100 space-y-3">
+                    <div className="h-5 w-28 bg-gray-200 rounded" />
+                    <div className="h-4 w-full bg-gray-200 rounded" />
+                    <div className="h-4 w-11/12 bg-gray-200 rounded" />
+                    <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="xl:col-span-4 space-y-6">
+                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                  <div className="h-5 w-32 bg-gray-200 rounded mb-4" />
+                  <div className="space-y-2">
+                    {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                      <div key={i} className="h-5 bg-gray-200 rounded" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

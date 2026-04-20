@@ -67,10 +67,12 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <span className="text-2xl lg:text-3xl font-bold text-black">
-              carspy
-            </span>
+          <Link href="/" className="flex items-center gap-0 flex-shrink-0 px-1 py-0.5">
+            <img
+              src="/Add%20a%20heading.svg"
+              alt="carspy logo"
+              className="h-20 lg:h-24 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}

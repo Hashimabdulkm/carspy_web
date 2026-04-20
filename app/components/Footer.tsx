@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, Twitter, Car, PlayCircle, Apple } from 'lucide-react'
+import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, Twitter, PlayCircle, Apple } from 'lucide-react'
 
 const popularSUVs = [
   { name: 'Hyundai Creta', link: '/new-cars/hyundai/creta' },
@@ -37,9 +37,8 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-1 sm:col-span-2">
-            <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <Car className="w-7 h-7 sm:w-8 sm:h-8 text-primary flex-shrink-0" />
-              <span className="text-xl sm:text-2xl font-bold">carspy</span>
+            <div className="mb-3 sm:mb-4 flex items-center gap-2">
+              <span className="text-xl sm:text-2xl font-bold text-white">carspy</span>
             </div>
             <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 max-w-md">
               carspy is your all-in-one app for all your vehicle info needs and RTO vehicle information. Now manage all your vehicles in one place.
@@ -47,15 +46,15 @@ export function Footer() {
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-sm">
                 <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                <Link href="tel:+91 93-55-777-529" className="hover:text-white break-all">93-55-777-529</Link>
+                <Link href="tel:+91 8590870269" className="hover:text-white break-all">8590870269</Link>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-sm">
                 <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                <Link href="mailto:support@carspy.app" className="hover:text-white break-all">support@carspy.app</Link>
+                <Link href="mailto:admin@carspy.in" className="hover:text-white break-all">admin@carspy.in</Link>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-sm">
                 <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                <span>Delhi</span>
+                <span>Kochi, Kerala</span>
               </div>
             </div>
             <div className="flex gap-3 sm:gap-4 mt-3 sm:mt-4">

@@ -11,16 +11,21 @@ export function GetInTouch() {
           <h4>Get In Touch</h4>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          <div className="bg-white rounded-lg p-4 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer hover:shadow-lg transition-shadow min-w-0">
+          <Link
+            href="https://wa.me/918590870269"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white rounded-lg p-4 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer hover:shadow-lg transition-shadow text-inherit no-underline min-w-0"
+          >
             <div className="bg-green-100 p-2.5 sm:p-3 rounded-full flex-shrink-0">
               <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
             </div>
             <div className="min-w-0 flex-1">
               <h6 className="font-semibold text-sm sm:text-base">Chat with us</h6>
-              <p className="text-xs sm:text-sm text-gray-500 truncate">Send us a message</p>
+              <p className="text-xs sm:text-sm text-gray-500 truncate">Send us a WhatsApp message</p>
             </div>
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
-          </div>
+          </Link>
           
           <Link href="tel:+91 93-55-777-529" className="bg-white rounded-lg p-4 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer hover:shadow-lg transition-shadow text-inherit no-underline min-w-0">
             <div className="bg-blue-100 p-2.5 sm:p-3 rounded-full flex-shrink-0">
@@ -28,7 +33,7 @@ export function GetInTouch() {
             </div>
             <div className="min-w-0 flex-1">
               <h6 className="font-semibold text-sm sm:text-base">Talk to us</h6>
-              <p className="text-xs sm:text-sm text-gray-500">93-55-777-529</p>
+              <p className="text-xs sm:text-sm text-gray-500">8590870269</p>
             </div>
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
           </Link>
@@ -39,7 +44,7 @@ export function GetInTouch() {
             </div>
             <div className="min-w-0 flex-1">
               <h6 className="font-semibold text-sm sm:text-base">Write to us</h6>
-              <p className="text-xs sm:text-sm text-gray-500 truncate">support@carspy.app</p>
+              <p className="text-xs sm:text-sm text-gray-500 truncate">admin@carspy.in</p>
             </div>
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
           </Link>

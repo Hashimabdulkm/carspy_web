@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Button } from '@/app/components/ui/button'
+import { Card, CardContent } from '@/app/components/ui/card'
 import type { CarListing, CarsListResponse } from '@/app/lib/cars-api'
 import { getCarDisplayName, getCarImageUrl } from '@/app/lib/cars-api'
 
@@ -22,7 +24,7 @@ export function TrendingCars() {
   }, [])
 
   return (
-    <section className="home_newCars__DMUEA w-full">
+    <section className="w-full py-10 sm:py-12">
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <h4 className="text-base sm:text-lg lg:text-2xl">Trending New Cars</h4>
@@ -31,44 +33,64 @@ export function TrendingCars() {
           </Link>
         </div>
         {loading ? (
-          <div className="home_carsList__37U1g flex gap-4 overflow-x-auto pb-2">
+          <div className="mt-4 flex gap-4 sm:gap-6 overflow-x-auto pb-2 snap-x snap-mandatory">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="home_carItem__1Q0kL flex-shrink-0 w-[180px] animate-pulse">
-                <div className="home_carImage__4chct aspect-square bg-gray-200 rounded" />
-                <div className="home_carspy__BlvS5 mt-2 h-4 bg-gray-200 rounded w-3/4" />
-                <div className="h-4 bg-gray-200 rounded w-1/2 mt-1" />
-              </div>
+              <Card key={i} className="overflow-hidden flex-shrink-0 w-[260px] sm:w-[300px] snap-start">
+                <div className="aspect-video bg-gray-100 animate-pulse" />
+                <CardContent className="p-4 space-y-2">
+                  <div className="h-4 bg-gray-100 rounded animate-pulse w-2/3" />
+                  <div className="h-5 bg-gray-100 rounded animate-pulse w-1/2" />
+                  <div className="h-6 bg-gray-100 rounded animate-pulse w-1/3 mt-2" />
+                </CardContent>
+              </Card>
             ))}
           </div>
         ) : (
-          <div className="home_carsList__37U1g">
+          <div className="mt-4 flex gap-4 sm:gap-6 overflow-x-auto pb-2 snap-x snap-mandatory">
             {cars.map((car) => {
               const name = getCarDisplayName(car)
               const imageUrl = getCarImageUrl(car)
+              const numericPrice = car.price != null ? Number(car.price) : null
               return (
                 <Link
-                  key={car.id}
-                  className="home_carItem__1Q0kL"
-                  href={`/cars/${car.id}`}
-                >
-                  <div className="home_carImage__4chct">
-                    {imageUrl ? (
-                      <img alt={name} src={imageUrl} />
-                    ) : (
-                      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm min-h-[120px]">No image</div>
-                    )}
-                  </div>
-                  <div className="home_carspy__BlvS5">
-                    <h5>{name}</h5>
-                    <p>{car.price != null ? `₹ ${car.price.toLocaleString('en-IN')}` : '—'}</p>
-                  </div>
-                </Link>
+                    key={car.id}
+                    href={`/cars/${car.id}`}
+                    className="flex-shrink-0 w-[260px] sm:w-[300px] snap-start"
+                  >
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer overflow-hidden h-full">
+                      <div className="aspect-video relative bg-gray-100">
+                        {imageUrl ? (
+                          <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">No image</div>
+                        )}
+                      </div>
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="min-w-0">
+                            <p className="text-xs sm:text-sm text-gray-500">{car.vehicleModel?.brand?.name ?? '—'}</p>
+                            <h3 className="font-semibold text-base sm:text-lg truncate">{name}</h3>
+                          </div>
+                          {numericPrice != null && !Number.isNaN(numericPrice) && (
+                            <p className="text-primary font-bold text-lg sm:text-xl flex-shrink-0">
+                              ₹{(numericPrice / 100000).toFixed(1)} L
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
+                          {car.year != null && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.year}</span>}
+                          {car.fuel_type && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.fuel_type}</span>}
+                          {car.transmission && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.transmission}</span>}
+                        </div>
+                        <Button className="w-full mt-2 sm:mt-3" size="sm">
+                          View Details
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Link>
               )
             })}
           </div>
-        )}
-        {!loading && cars.length > 0 && (
-          <div className="home_slideArrow__4ilZN home_rightArrow__08Aiq" aria-hidden>&gt;</div>
         )}
       </div>
     </section>
