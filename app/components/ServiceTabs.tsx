@@ -323,7 +323,7 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
               aria-label={tab.label}
             >
               <Icon className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-gray-600" />
-              <div>
+              <div className="flex flex-col items-center text-center">
                 <div data-status={activeTab === tab.id ? 'active' : 'inactive'}>
                   {tab.label}
                 </div>
