@@ -8,7 +8,6 @@ import {
   Car,
   FileText,
   CreditCard,
-  Bike,
   Tag,
   Search,
 } from 'lucide-react'
@@ -92,15 +91,6 @@ const defaultTabs: ServiceTabConfig[] = [
     label: 'Car Insurance',
     icon: Car,
     href: '/car-insurance',
-    placeholder: 'Enter Vehicle Number',
-    needsVehicleNumber: true,
-    comingSoon: true,
-  },
-  {
-    id: 'bike-insurance',
-    label: 'Bike Insurance',
-    icon: Bike,
-    href: '/bike-insurance',
     placeholder: 'Enter Vehicle Number',
     needsVehicleNumber: true,
     comingSoon: true,
@@ -327,11 +317,6 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
                 <div data-status={activeTab === tab.id ? 'active' : 'inactive'}>
                   {tab.label}
                 </div>
-                {tab.comingSoon && (
-                  <span className="mt-1 inline-block rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800">
-                    Coming Soon
-                  </span>
-                )}
               </div>
               <div
                 className={`tabs_line__8Dhax ${activeTab === tab.id ? '' : ' '}`}
@@ -342,102 +327,113 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
       </div>
 
       <div className="home_inputVehicalContainer__4kwKQ">
-        <form onSubmit={handleSearch}>
-          {showCarFilter ? (
-            <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
-              <select
-                value={carBrand}
-                onChange={(e) => setCarBrand(e.target.value ? Number(e.target.value) : '')}
-                className="car-filter-select w-full min-w-0 pl-3 pr-9 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] appearance-none cursor-pointer"
-                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
-                aria-label="Brand"
-              >
-                <option value="">Brand</option>
-                {brandOptions.map((brand) => (
-                  <option key={brand.id} value={brand.id}>{brand.name}</option>
-                ))}
-              </select>
-              <select
-                value={carModel}
-                onChange={(e) => setCarModel(e.target.value ? Number(e.target.value) : '')}
-                className="car-filter-select w-full min-w-0 pl-3 pr-9 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] appearance-none cursor-pointer"
-                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
-                aria-label="Model"
-              >
-                <option value="">Model</option>
-                {modelOptions.map((model) => (
-                  <option key={model.id} value={model.id}>{model.name}</option>
-                ))}
-              </select>
-              <div className="w-full min-w-0 flex flex-col gap-1 col-span-2 sm:col-span-1">
-                <Slider
-                  value={priceRange}
-                  onValueChange={(v) => setPriceRange(v as [number, number])}
-                  max={PRICE_SLIDER_MAX}
-                  step={PRICE_SLIDER_STEP}
-                  className="w-full"
-                />
-                <span className="text-sm text-muted-foreground whitespace-nowrap truncate">
-                  ₹{priceRange[0]} - ₹{priceRange[1] === PRICE_SLIDER_MAX ? '100+' : priceRange[1]} Lakh
-                </span>
-              </div>
-              <Button type="submit" className="bg-primary hover:bg-primary/90 w-full min-w-0 col-span-2 sm:col-span-1">
-                <Search className="w-4 h-4 mr-2" />
-                Find cars
-              </Button>
-            </div>
-          ) : activeTab === 'rc-details' ? (
-            <div className="flex flex-col sm:flex-row gap-3 w-full">
-              <select
-                value={rcSearchType}
-                onChange={(e) => setRcSearchType(e.target.value as RcSearchType)}
-                className="px-3 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] min-w-[140px] shrink-0"
-                aria-label="Search by"
-              >
-                {RC_SEARCH_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-              <div className="input_inputWrapper__6aRlN flex-1 min-w-0">
-                <div className="home_inputPrefixContent__BSuqO flex items-center gap-2">
-                  <p>IND</p>
+        {activeTabConfig?.comingSoon ? (
+          <div className="w-full rounded-lg border border-amber-300 bg-amber-50 px-4 py-6 text-center">
+            <p className="text-sm font-semibold uppercase tracking-wide text-amber-800">
+              Coming Soon
+            </p>
+            <p className="mt-1 text-sm text-amber-900">
+              {activeTabConfig.label} will be available shortly.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSearch}>
+            {showCarFilter ? (
+              <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
+                <select
+                  value={carBrand}
+                  onChange={(e) => setCarBrand(e.target.value ? Number(e.target.value) : '')}
+                  className="car-filter-select w-full min-w-0 pl-3 pr-9 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] appearance-none cursor-pointer"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
+                  aria-label="Brand"
+                >
+                  <option value="">Brand</option>
+                  {brandOptions.map((brand) => (
+                    <option key={brand.id} value={brand.id}>{brand.name}</option>
+                  ))}
+                </select>
+                <select
+                  value={carModel}
+                  onChange={(e) => setCarModel(e.target.value ? Number(e.target.value) : '')}
+                  className="car-filter-select w-full min-w-0 pl-3 pr-9 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] appearance-none cursor-pointer"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
+                  aria-label="Model"
+                >
+                  <option value="">Model</option>
+                  {modelOptions.map((model) => (
+                    <option key={model.id} value={model.id}>{model.name}</option>
+                  ))}
+                </select>
+                <div className="w-full min-w-0 flex flex-col gap-1 col-span-2 sm:col-span-1">
+                  <Slider
+                    value={priceRange}
+                    onValueChange={(v) => setPriceRange(v as [number, number])}
+                    max={PRICE_SLIDER_MAX}
+                    step={PRICE_SLIDER_STEP}
+                    className="w-full"
+                  />
+                  <span className="text-sm text-muted-foreground whitespace-nowrap truncate">
+                    ₹{priceRange[0]} - ₹{priceRange[1] === PRICE_SLIDER_MAX ? '100+' : priceRange[1]} Lakh
+                  </span>
                 </div>
-                <Input
-                  type="text"
-                  placeholder={RC_SEARCH_OPTIONS.find((o) => o.value === rcSearchType)?.placeholder ?? 'Enter value'}
-                  value={vehicleNumber}
-                  onChange={(e) => setVehicleNumber(e.target.value)}
-                  className="input_inputBox__cnp18 border-0 focus-visible:ring-0"
-                  aria-label={RC_SEARCH_OPTIONS.find((o) => o.value === rcSearchType)?.label ?? 'Value'}
-                />
+                <Button type="submit" className="bg-primary hover:bg-primary/90 w-full min-w-0 col-span-2 sm:col-span-1">
+                  <Search className="w-4 h-4 mr-2" />
+                  Find cars
+                </Button>
               </div>
-              <Button type="submit" className="bg-primary hover:bg-primary/90 shrink-0">
-                <Search className="w-4 h-4 mr-2" />
-                Search
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="input_inputWrapper__6aRlN">
-                <div className="home_inputPrefixContent__BSuqO flex items-center gap-2">
-                  <p>IND</p>
+            ) : activeTab === 'rc-details' ? (
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <select
+                  value={rcSearchType}
+                  onChange={(e) => setRcSearchType(e.target.value as RcSearchType)}
+                  className="px-3 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] min-w-[140px] shrink-0"
+                  aria-label="Search by"
+                >
+                  {RC_SEARCH_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+                <div className="input_inputWrapper__6aRlN flex-1 min-w-0">
+                  <div className="home_inputPrefixContent__BSuqO flex items-center gap-2">
+                    <p>IND</p>
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder={RC_SEARCH_OPTIONS.find((o) => o.value === rcSearchType)?.placeholder ?? 'Enter value'}
+                    value={vehicleNumber}
+                    onChange={(e) => setVehicleNumber(e.target.value)}
+                    className="input_inputBox__cnp18 border-0 focus-visible:ring-0"
+                    aria-label={RC_SEARCH_OPTIONS.find((o) => o.value === rcSearchType)?.label ?? 'Value'}
+                  />
                 </div>
-                <Input
-                  type="text"
-                  placeholder={activeTabConfig?.placeholder ?? 'Enter Vehicle Registration Number'}
-                  value={vehicleNumber}
-                  onChange={(e) => setVehicleNumber(e.target.value)}
-                  className="input_inputBox__cnp18 border-0 focus-visible:ring-0"
-                  aria-label="Vehicle number or search"
-                />
+                <Button type="submit" className="bg-primary hover:bg-primary/90 shrink-0">
+                  <Search className="w-4 h-4 mr-2" />
+                  Search
+                </Button>
               </div>
-              <Button type="submit" className="bg-primary hover:bg-primary/90">
-                <Search className="w-4 h-4 mr-2" />
-                {showVehicleInput ? 'Search' : 'Go'}
-              </Button>
-            </>
-          )}
-        </form>
+            ) : (
+              <>
+                <div className="input_inputWrapper__6aRlN">
+                  <div className="home_inputPrefixContent__BSuqO flex items-center gap-2">
+                    <p>IND</p>
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder={activeTabConfig?.placeholder ?? 'Enter Vehicle Registration Number'}
+                    value={vehicleNumber}
+                    onChange={(e) => setVehicleNumber(e.target.value)}
+                    className="input_inputBox__cnp18 border-0 focus-visible:ring-0"
+                    aria-label="Vehicle number or search"
+                  />
+                </div>
+                <Button type="submit" className="bg-primary hover:bg-primary/90">
+                  <Search className="w-4 h-4 mr-2" />
+                  {showVehicleInput ? 'Search' : 'Go'}
+                </Button>
+              </>
+            )}
+          </form>
+        )}
 
         {activeTab === 'rc-details' && (rcLoading || rcError || rcDetails) && (
           <div className="mt-4 p-4 rounded-lg border border-[var(--border)] bg-white min-h-[120px]">

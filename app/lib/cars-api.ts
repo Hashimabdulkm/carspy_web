@@ -92,8 +92,8 @@ export interface NewCarsParams {
   page?: number
 }
 
-/** Query params for GET /api/cars/old (extends new with mileage) */
-export interface OldCarsParams extends NewCarsParams {
+/** Query params for GET /api/cars/old (new params + mileage + mileage sort) */
+export interface OldCarsParams extends Omit<NewCarsParams, 'sort'> {
   mileage_min?: number
   mileage_max?: number
   sort?: NewCarsParams['sort'] | 'mileage_asc' | 'mileage_desc'
