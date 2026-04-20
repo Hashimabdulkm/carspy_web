@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/app/components/ui/button'
 import { Card, CardContent } from '@/app/components/ui/card'
 import type { CarListing, CarsListResponse } from '@/app/lib/cars-api'
@@ -10,6 +11,7 @@ import { getCarDisplayName, getCarImageUrl } from '@/app/lib/cars-api'
 export function UsedCars() {
   const [cars, setCars] = useState<CarListing[]>([])
   const [loading, setLoading] = useState(true)
+  const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null)
 
   useEffect(() => {
     fetch('/api/cars/old?per_page=8&page=1&sort=newest')
@@ -23,6 +25,15 @@ export function UsedCars() {
       .finally(() => setLoading(false))
   }, [])
 
+  const scrollByAmount = (direction: 'left' | 'right') => {
+    if (!scrollContainer) return
+    const amount = 340
+    scrollContainer.scrollBy({
+      left: direction === 'left' ? -amount : amount,
+      behavior: 'smooth',
+    })
+  }
+
   return (
     <section className="w-full py-10 sm:py-12">
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
@@ -32,8 +43,28 @@ export function UsedCars() {
             View all
           </Link>
         </div>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => scrollByAmount('left')}
+            className="hidden lg:flex items-center justify-center absolute left-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/95 border border-gray-200 shadow-sm hover:shadow-md text-gray-700"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByAmount('right')}
+            className="hidden lg:flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/95 border border-gray-200 shadow-sm hover:shadow-md text-gray-700"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         {loading ? (
-          <div className="mt-4 flex gap-4 sm:gap-6 overflow-x-auto pb-2 snap-x snap-mandatory">
+          <div
+            ref={setScrollContainer}
+            className="mt-4 flex gap-4 sm:gap-6 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <Card key={i} className="overflow-hidden flex-shrink-0 w-[260px] sm:w-[300px] snap-start">
                 <div className="aspect-video bg-gray-100 animate-pulse" />
@@ -46,7 +77,10 @@ export function UsedCars() {
             ))}
           </div>
         ) : (
-          <div className="mt-4 flex gap-4 sm:gap-6 overflow-x-auto pb-2 snap-x snap-mandatory">
+          <div
+            ref={setScrollContainer}
+            className="mt-4 flex gap-4 sm:gap-6 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
             {cars.map((car) => {
               const name = getCarDisplayName(car)
               const imageUrl = getCarImageUrl(car)
@@ -93,6 +127,7 @@ export function UsedCars() {
             })}
           </div>
         )}
+        </div>
       </div>
     </section>
   )
