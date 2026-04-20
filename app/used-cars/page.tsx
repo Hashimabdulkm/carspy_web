@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { Suspense, useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Filter, X } from 'lucide-react'
@@ -32,7 +32,7 @@ const OLD_SORT_MAP: Record<string, string> = {
   'mileage-desc': 'mileage_desc',
 }
 
-export default function UsedCarsPage() {
+function UsedCarsPageContent() {
   const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<number[]>([])
   const [selectedModelId, setSelectedModelId] = useState<number | ''>('')
@@ -483,6 +483,13 @@ export default function UsedCarsPage() {
                   {cars.map((car) => {
                     const name = getCarDisplayName(car)
                     const imageUrl = getCarImageUrl(car)
+                    const priceValue =
+                      typeof car.price === 'number'
+                        ? car.price
+                        : typeof car.price === 'string'
+                          ? Number(car.price)
+                          : Number.NaN
+                    const hasPrice = Number.isFinite(priceValue)
                     return (
                       <Link href={`/cars/${car.id}`} key={car.id}>
                         <Card className="hover:shadow-lg transition-shadow cursor-pointer overflow-hidden h-full">
@@ -499,9 +506,9 @@ export default function UsedCarsPage() {
                                 <p className="text-xs sm:text-sm text-gray-500">{car.vehicleModel?.brand?.name ?? '—'}</p>
                                 <h3 className="font-semibold text-base sm:text-lg truncate">{name}</h3>
                               </div>
-                              {car.price != null && (
+                              {hasPrice && (
                                 <p className="text-primary font-bold text-lg sm:text-xl flex-shrink-0">
-                                  ₹{(car.price / 100000).toFixed(1)} L
+                                  ₹{(priceValue / 100000).toFixed(1)} L
                                 </p>
                               )}
                             </div>
@@ -569,5 +576,13 @@ export default function UsedCarsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function UsedCarsPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8 text-center text-sm text-muted-foreground">Loading used cars...</div>}>
+      <UsedCarsPageContent />
+    </Suspense>
   )
 }

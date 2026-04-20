@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { Suspense, useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Filter, X } from 'lucide-react'
@@ -22,7 +22,7 @@ const SORT_MAP: Record<string, string> = {
   'year-desc': 'year_desc',
 }
 
-export default function NewCarsPage() {
+function NewCarsPageContent() {
   const searchParams = useSearchParams()
   const [selectedBrands, setSelectedBrands] = useState<number[]>([])
   const [selectedModelId, setSelectedModelId] = useState<number | ''>('')
@@ -517,5 +517,13 @@ export default function NewCarsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function NewCarsPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8 text-center text-sm text-muted-foreground">Loading new cars...</div>}>
+      <NewCarsPageContent />
+    </Suspense>
   )
 }
