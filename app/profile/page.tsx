@@ -16,7 +16,6 @@ import {
   FileText,
   CreditCard,
   Shield,
-  Wrench,
   Plus,
   ChevronRight,
   Pencil,
@@ -28,7 +27,6 @@ const quickLinks = [
   { label: 'RC Details', href: '/rc-search', icon: FileText },
   { label: 'Challans', href: '/e-challan-check', icon: CreditCard },
   { label: 'Insurance', href: '/car-insurance', icon: Shield },
-  { label: 'Service History', href: '/service-history', icon: Wrench },
 ]
 
 // Placeholder saved vehicles

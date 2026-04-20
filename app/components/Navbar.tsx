@@ -8,7 +8,6 @@ import {
   FileText, 
   CreditCard, 
   Bike, 
-  Wrench, 
   Tag, 
   Search,
   User,
@@ -45,7 +44,6 @@ export function Navbar() {
         { label: 'RC Details', href: '/rc-search', icon: <FileText className="w-4 h-4" /> },
         { label: 'Challans', href: '/e-challan-check', icon: <CreditCard className="w-4 h-4" /> },
         { label: 'RTO Details', href: '/rto-vehicle-registration-detail', icon: <Tag className="w-4 h-4" /> },
-        { label: 'Service History', href: '/service-history', icon: <Wrench className="w-4 h-4" /> },
       ]
     },
     {

@@ -91,7 +91,6 @@ export function Footer() {
               <li><Link href="/rc-search" className="text-gray-400 hover:text-white">Check RC Details</Link></li>
               <li><Link href="/rto-vehicle-registration-detail" className="text-gray-400 hover:text-white">Check RTO Details</Link></li>
               <li><Link href="/e-challan-check" className="text-gray-400 hover:text-white">Check Challans</Link></li>
-              <li><Link href="/service-history" className="text-gray-400 hover:text-white">Service History</Link></li>
             </ul>
           </div>
 
