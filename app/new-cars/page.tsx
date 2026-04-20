@@ -241,7 +241,7 @@ export default function NewCarsPage() {
                 {/* Brand */}
                 <div className="mb-6">
                   <Label className="mb-2 block">Brand</Label>
-                  <div className="space-y-2">
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
                     {brands.map((brand) => (
                       <div key={brand.id} className="flex items-center space-x-2">
                         <Checkbox 
@@ -387,6 +387,7 @@ export default function NewCarsPage() {
                     setEngineCapacityMax('')
                     setPriceRange([0, 100])
                     setSearchQuery('')
+                    setPage(1)
                   }}
                 >
                   Clear All Filters
@@ -433,28 +434,33 @@ export default function NewCarsPage() {
                     const imageUrl = getCarImageUrl(car)
                     return (
                       <Link href={`/cars/${car.id}`} key={car.id}>
-                        <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-                          <div className="aspect-video relative bg-white flex items-center justify-center p-3 sm:p-4">
+                        <Card className="hover:shadow-lg transition-shadow cursor-pointer overflow-hidden h-full">
+                          <div className="aspect-video relative bg-gray-100">
                             {imageUrl ? (
-                              <img src={imageUrl} alt={name} className="max-w-full max-h-full object-contain" />
+                              <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm">No image</div>
+                              <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">No image</div>
                             )}
                           </div>
                           <CardContent className="p-3 sm:p-4">
-                            <p className="text-xs sm:text-sm text-gray-500">{car.vehicleModel?.brand?.name ?? '—'}</p>
-                            <h3 className="font-semibold text-base sm:text-lg">{name}</h3>
+                            <div className="flex justify-between items-start gap-2">
+                              <div className="min-w-0">
+                                <p className="text-xs sm:text-sm text-gray-500">{car.vehicleModel?.brand?.name ?? '—'}</p>
+                                <h3 className="font-semibold text-base sm:text-lg truncate">{name}</h3>
+                              </div>
+                              {car.price != null && (
+                                <p className="text-primary font-bold text-lg sm:text-xl flex-shrink-0">
+                                  ₹{(Number(car.price) / 100000).toFixed(1)} L
+                                </p>
+                              )}
+                            </div>
                             <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
+                              {car.year != null && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.year}</span>}
                               {car.fuel_type && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.fuel_type}</span>}
                               {car.transmission && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.transmission}</span>}
                               {car.seating_capacity != null && <span className="text-xs bg-gray-100 px-2 py-0.5 sm:py-1 rounded">{car.seating_capacity} Seats</span>}
                             </div>
-                            {car.price != null && (
-                              <p className="text-primary font-bold text-lg sm:text-xl mt-2">
-                                ₹{car.price.toLocaleString('en-IN')}
-                              </p>
-                            )}
-                            <Button className="w-full mt-2" size="sm">
+                            <Button className="w-full mt-2 sm:mt-3" size="sm">
                               View Details
                             </Button>
                           </CardContent>
