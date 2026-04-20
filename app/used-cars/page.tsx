@@ -99,6 +99,8 @@ export default function UsedCarsPage() {
   useEffect(() => {
     const brandId = searchParams.get('brand_id')
     if (brandId && !Number.isNaN(Number(brandId))) setSelectedBrands([Number(brandId)])
+    const modelId = searchParams.get('vehicle_model_id')
+    if (modelId && !Number.isNaN(Number(modelId))) setSelectedModelId(Number(modelId))
     const pMin = searchParams.get('price_min')
     const pMax = searchParams.get('price_max')
     if (pMin != null || pMax != null) {

@@ -12,24 +12,61 @@ export interface CarsListResponse {
 /** Single listing (new or old) from list or GET /api/cars/{id} */
 export interface CarListing {
   id: number
+  user_id?: number
+  type?: string
   title?: string
   description?: string
-  price?: number
+  price?: number | string
   year?: number
+  mileage_km?: number
   mileage?: number
+  registration_number?: string
+  chassis_number?: string
+  status?: string
   transmission?: string
   fuel_type?: string
+  engine_capacity_cc?: number
+  mileage_fuel_efficiency?: string
+  drivetrain?: string
   body_type?: string
   seating_capacity?: number
+  boot_space?: string
+  ground_clearance?: string
+  safety_rating_ncap?: string
+  airbags_count?: number
+  abs_esc?: string
+  infotainment_features?: string
+  on_road_price?: number | string | null
+  maintenance_cost?: string | null
+  insurance_cost?: number | string | null
+  resale_value?: number | string | null
+  warranty?: string | null
   engine_capacity?: number
   vehicle_model_id?: number
   vehicleModel?: {
     id?: number
+    brand_id?: number
+    category_id?: number
     name?: string
+    created_at?: string | null
+    updated_at?: string | null
     brand?: { id: number; name: string }
-    category?: { id: number; name: string }
+    category?: { id: number; name: string; base_price?: string | null }
   }
-  photos?: { id?: number; url: string }[]
+  vehicle_model?: {
+    id?: number
+    brand_id?: number
+    category_id?: number
+    name?: string
+    created_at?: string | null
+    updated_at?: string | null
+    brand?: { id: number; name: string }
+    category?: { id: number; name: string; base_price?: string | null }
+  }
+  photos?: { id?: number; path?: string; sort_order?: number; url: string }[]
+  created_at?: string
+  updated_at?: string
+  deleted_at?: string | null
   user?: { id: number; name: string }
   [key: string]: unknown
 }
@@ -85,8 +122,9 @@ export function buildCarsQuery(params: Record<string, unknown>): string {
 }
 
 export function getCarDisplayName(car: CarListing): string {
-  const model = car.vehicleModel?.name
-  const brand = car.vehicleModel?.brand?.name
+  const modelData = car.vehicleModel ?? car.vehicle_model
+  const model = modelData?.name
+  const brand = modelData?.brand?.name
   if (model && brand) return `${brand} ${model}`
   if (car.title) return car.title
   return `Car #${car.id}`

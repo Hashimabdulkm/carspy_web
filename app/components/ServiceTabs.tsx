@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { LucideIcon } from 'lucide-react'
 import { useAuth } from '@/app/context/AuthContext'
@@ -16,39 +16,10 @@ import { Input } from '@/app/components/ui/input'
 import { Button } from '@/app/components/ui/button'
 import { Slider } from '@/app/components/ui/slider'
 
-/** Options for New Car / Used Car filter row */
-const carFilterBrands = [
-  { value: '', label: 'Brand' },
-  { value: 'maruti-suzuki', label: 'Maruti Suzuki' },
-  { value: 'hyundai', label: 'Hyundai' },
-  { value: 'tata', label: 'Tata' },
-  { value: 'mahindra', label: 'Mahindra' },
-  { value: 'honda', label: 'Honda' },
-  { value: 'toyota', label: 'Toyota' },
-  { value: 'kia', label: 'Kia' },
-  { value: 'volkswagen', label: 'Volkswagen' },
-  { value: 'skoda', label: 'Skoda' },
-  { value: 'mg', label: 'MG' },
-]
-
-const carFilterModels = [
-  { value: '', label: 'Model' },
-  { value: 'creta', label: 'Creta' },
-  { value: 'swift', label: 'Swift' },
-  { value: 'nexon', label: 'Nexon' },
-  { value: 'city', label: 'City' },
-  { value: 'virtus', label: 'Virtus' },
-  { value: 'baleno', label: 'Baleno' },
-  { value: 'seltos', label: 'Seltos' },
-  { value: 'grand-vitara', label: 'Grand Vitara' },
-  { value: 'brezza', label: 'Brezza' },
-  { value: 'altroz', label: 'Altroz' },
-  { value: 'punch', label: 'Punch' },
-  { value: 'scorpio-n', label: 'Scorpio N' },
-  { value: 'xuv700', label: 'XUV700' },
-  { value: 'kushaq', label: 'Kushaq' },
-  { value: 'slavia', label: 'Slavia' },
-]
+interface CarFiltersData {
+  brands: { id: number; name: string }[]
+  vehicle_models: { id: number; name: string; brand_id: number; category_id: number }[]
+}
 
 /** Price slider: values in lakh, max 100 = ₹1 crore */
 const PRICE_SLIDER_MAX = 100
@@ -76,6 +47,8 @@ export interface ServiceTabConfig {
   defaultActive?: boolean
   /** If true, show brand / model / price filter instead of search input */
   useCarFilter?: boolean
+  /** If true, show "Coming Soon" tag on tab */
+  comingSoon?: boolean
 }
 
 const defaultTabs: ServiceTabConfig[] = [
@@ -121,6 +94,7 @@ const defaultTabs: ServiceTabConfig[] = [
     href: '/car-insurance',
     placeholder: 'Enter Vehicle Number',
     needsVehicleNumber: true,
+    comingSoon: true,
   },
   {
     id: 'bike-insurance',
@@ -129,6 +103,7 @@ const defaultTabs: ServiceTabConfig[] = [
     href: '/bike-insurance',
     placeholder: 'Enter Vehicle Number',
     needsVehicleNumber: true,
+    comingSoon: true,
   },
   {
     id: 'fastag',
@@ -137,6 +112,7 @@ const defaultTabs: ServiceTabConfig[] = [
     href: '/fastag',
     placeholder: 'Enter Vehicle Number for FASTag',
     needsVehicleNumber: true,
+    comingSoon: true,
   },
 ]
 
@@ -195,9 +171,10 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
 
   const [activeTab, setActiveTab] = useState(defaultTabId)
   const [vehicleNumber, setVehicleNumber] = useState('')
-  const [carBrand, setCarBrand] = useState('')
-  const [carModel, setCarModel] = useState('')
+  const [carBrand, setCarBrand] = useState<number | ''>('')
+  const [carModel, setCarModel] = useState<number | ''>('')
   const [priceRange, setPriceRange] = useState<[number, number]>([0, PRICE_SLIDER_MAX])
+  const [carFilters, setCarFilters] = useState<CarFiltersData | null>(null)
   const [rcDetails, setRcDetails] = useState<RcDetailsData | null>(null)
   const [rcLoading, setRcLoading] = useState(false)
   const [rcError, setRcError] = useState<string | null>(null)
@@ -206,6 +183,32 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
   const activeTabConfig = tabs.find((t) => t.id === activeTab) ?? tabs[0]
   const showVehicleInput = activeTabConfig?.needsVehicleNumber !== false
   const showCarFilter = activeTabConfig?.useCarFilter === true
+  const carFilterType = activeTab === 'used-car' ? 'old' : 'new'
+
+  useEffect(() => {
+    if (!showCarFilter) return
+    fetch(`/api/cars/filters?type=${carFilterType}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const raw = data as CarFiltersData & { data?: CarFiltersData }
+        setCarFilters(raw.data ?? raw)
+      })
+      .catch(() => setCarFilters(null))
+  }, [showCarFilter, carFilterType])
+
+  const brandOptions = carFilters?.brands ?? []
+  const modelOptions = useMemo(() => {
+    const allModels = carFilters?.vehicle_models ?? []
+    if (carBrand === '') return allModels
+    return allModels.filter((model) => model.brand_id === carBrand)
+  }, [carFilters, carBrand])
+
+  useEffect(() => {
+    if (carModel === '') return
+    if (!modelOptions.some((model) => model.id === carModel)) {
+      setCarModel('')
+    }
+  }, [carModel, modelOptions])
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -266,8 +269,8 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
 
     if (showCarFilter) {
       onSearch?.(activeTabConfig.id, '')
-      if (carBrand) url.searchParams.set('brand', carBrand)
-      if (carModel) url.searchParams.set('model', carModel)
+      if (carBrand !== '') url.searchParams.set('brand_id', String(carBrand))
+      if (carModel !== '') url.searchParams.set('vehicle_model_id', String(carModel))
       const [minLakh, maxLakh] = priceRange
       if (minLakh > 0 || maxLakh < PRICE_SLIDER_MAX) {
         url.searchParams.set('price_min', String(minLakh * 100000))
@@ -324,6 +327,11 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
                 <div data-status={activeTab === tab.id ? 'active' : 'inactive'}>
                   {tab.label}
                 </div>
+                {tab.comingSoon && (
+                  <span className="mt-1 inline-block rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800">
+                    Coming Soon
+                  </span>
+                )}
               </div>
               <div
                 className={`tabs_line__8Dhax ${activeTab === tab.id ? '' : ' '}`}
@@ -339,24 +347,26 @@ export function ServiceTabs({ tabs: tabsProp, onSearch }: ServiceTabsProps) {
             <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
               <select
                 value={carBrand}
-                onChange={(e) => setCarBrand(e.target.value)}
+                onChange={(e) => setCarBrand(e.target.value ? Number(e.target.value) : '')}
                 className="car-filter-select w-full min-w-0 pl-3 pr-9 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] appearance-none cursor-pointer"
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
                 aria-label="Brand"
               >
-                {carFilterBrands.map((o) => (
-                  <option key={o.value || 'brand'} value={o.value}>{o.label}</option>
+                <option value="">Brand</option>
+                {brandOptions.map((brand) => (
+                  <option key={brand.id} value={brand.id}>{brand.name}</option>
                 ))}
               </select>
               <select
                 value={carModel}
-                onChange={(e) => setCarModel(e.target.value)}
+                onChange={(e) => setCarModel(e.target.value ? Number(e.target.value) : '')}
                 className="car-filter-select w-full min-w-0 pl-3 pr-9 py-2.5 rounded-lg border border-[var(--input)] bg-[#f5f5f5] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] appearance-none cursor-pointer"
                 style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
                 aria-label="Model"
               >
-                {carFilterModels.map((o) => (
-                  <option key={o.value || 'model'} value={o.value}>{o.label}</option>
+                <option value="">Model</option>
+                {modelOptions.map((model) => (
+                  <option key={model.id} value={model.id}>{model.name}</option>
                 ))}
               </select>
               <div className="w-full min-w-0 flex flex-col gap-1 col-span-2 sm:col-span-1">
