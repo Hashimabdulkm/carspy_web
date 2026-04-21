@@ -3,20 +3,20 @@
 :root {
   /* Theme: pbmit-xclean */
   --pbmit-xclean-global-color: #fba311;
-  --pbmit-xclean-secondary-color: #09042d;
+  --pbmit-xclean-secondary-color: #000000;
   --pbmit-xclean-gradient-color-first: #fba311;
   --pbmit-xclean-gradient-color-last: #f2b210;
   --pbmit-xclean-logo-height: 58px;
   --pbmit-xclean-sticky-logo-height: 50px;
   --pbmit-xclean-responsive-logo-height: 50px;
-  --pbmit-xclean-link-color-normal: #001837;
+  --pbmit-xclean-link-color-normal: #000000;
   --pbmit-xclean-link-color-hover: #fba311;
   --pbmit-xclean-body-bg-color: #fff;
   --pbmit-xclean-white-color: #fff;
   --pbmit-xclean-light-bg-color: #f0f2f4;
-  --pbmit-xclean-blackish-color: #001837;
-  --pbmit-xclean-blackish-bg-color: #001837;
-  --pbmit-xclean-preheader-bgcolor-custom: #001837;
+  --pbmit-xclean-blackish-color: #000000;
+  --pbmit-xclean-blackish-bg-color: #000000;
+  --pbmit-xclean-preheader-bgcolor-custom: #000000;
   --pbmit-xclean-header-height: 90px;
   --pbmit-xclean-header-background-color: #fff;
   --pbmit-xclean-sticky-header-height: 90px;
@@ -26,19 +26,19 @@
   --pbmit-xclean-main-menu-typography-font-size: 14px;
   --pbmit-xclean-main-menu-typography-line-height: 24px;
   --pbmit-xclean-main-menu-typography-letter-spacing: 0.5px;
-  --pbmit-xclean-main-menu-typography-color: #001837;
+  --pbmit-xclean-main-menu-typography-color: #000000;
   --pbmit-xclean-main-menu-typography-text-transform: uppercase;
   --pbmit-xclean-main-menu-typography-font-style: normal;
   --pbmit-xclean-main-menu-typography-font-weight: 700;
   --pbmit-xclean-main-menu-active-color: #fba311;
-  --pbmit-xclean-main-menu-sticky-color: #001837;
+  --pbmit-xclean-main-menu-sticky-color: #000000;
   --pbmit-xclean-main-menu-sticky-active-color: #fba311;
   --pbmit-xclean-dropdown-menu-typography-font-family: var(--font-open-sans), "Open Sans", sans-serif;
   --pbmit-xclean-dropdown-menu-typography-variant: 600;
   --pbmit-xclean-dropdown-menu-typography-font-size: 14px;
   --pbmit-xclean-dropdown-menu-typography-line-height: 24px;
   --pbmit-xclean-dropdown-menu-typography-letter-spacing: 0;
-  --pbmit-xclean-dropdown-menu-typography-color: #001837;
+  --pbmit-xclean-dropdown-menu-typography-color: #000000;
   --pbmit-xclean-dropdown-menu-typography-text-transform: none;
   --pbmit-xclean-dropdown-menu-typography-font-style: normal;
   --pbmit-xclean-dropdown-menu-typography-font-weight: 600;

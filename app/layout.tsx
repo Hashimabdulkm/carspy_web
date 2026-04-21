@@ -25,6 +25,10 @@ export const metadata: Metadata = {
   title: "Carspy - Vehicle Information, RC Details, Challans & More",
   description: "Your all-in-one app for all your vehicle info needs and RTO vehicle information. Check RC details, challans, service history and more.",
   keywords: "car info, vehicle info, RC details, challans, service history, RTO, bike insurance, car insurance",
+  icons: {
+    icon: "/Untitled%20design.svg",
+    shortcut: "/Untitled%20design.svg",
+  },
 };
 
 export default function RootLayout({
