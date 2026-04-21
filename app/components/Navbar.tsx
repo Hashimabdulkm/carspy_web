@@ -51,6 +51,7 @@ export function Navbar() {
       children: [
         { label: 'New Cars', href: '/new-cars', icon: <Car className="w-4 h-4" /> },
         { label: 'Used Cars', href: '/used-cars', icon: <Car className="w-4 h-4" /> },
+        { label: 'Car Inspection', href: 'https://certifide.in/', icon: <Car className="w-4 h-4" /> },
       ]
     },
     // {

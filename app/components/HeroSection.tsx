@@ -24,7 +24,7 @@ export function HeroSection() {
               Vehicle Information Services
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
-              Your virtual
+              Your trusted
               <br />
               <span className="text-[var(--pbmit-xclean-global-color)]">car companion</span>
             </h1>
