@@ -26,7 +26,7 @@ export function HeroSection() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
               Your virtual
               <br />
-              <span className="text-[var(--pbmit-xclean-global-color)]">car assistant</span>
+              <span className="text-[var(--pbmit-xclean-global-color)]">car companion</span>
             </h1>
             <p className="mt-4 sm:mt-5 text-gray-300 text-base sm:text-lg max-w-xl mx-auto">
               Choose. Cruise. Care. All in one place.
