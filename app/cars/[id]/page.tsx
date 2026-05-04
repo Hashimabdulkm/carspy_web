@@ -110,10 +110,12 @@ export default function CarDetailPage() {
 
     const payload = {
       dealer_listing_id: car.id,
+      name: user.name ?? '',
       full_name: user.name ?? '',
-      email: user.email ?? undefined,
+      email: user.email ?? '',
+      phone: user.phone ?? '',
       phone_number: user.phone ?? '',
-      whatsapp_number: user.phone ?? undefined,
+      whatsapp_number: user.phone ?? '',
     }
 
     queueMicrotask(() => {
